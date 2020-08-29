@@ -1,8 +1,6 @@
 ﻿using GreatMachine.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 
 namespace GreatMachine.Pathfinding
 {
@@ -10,8 +8,6 @@ namespace GreatMachine.Pathfinding
     {
         private int MapWidth;
         private int MapHeight;
-
-
 
         private readonly bool[] ObstacleMap;
         private readonly int[] FlowFieldZ;

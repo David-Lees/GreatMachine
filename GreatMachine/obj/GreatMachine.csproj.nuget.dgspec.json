@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj": {}
+    "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj": {
+    "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
+        "projectUniqueName": "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
         "projectName": "GreatMachine",
-        "projectPath": "D:\\Projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
+        "projectPath": "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\GreatMachine\\GreatMachine\\obj\\",
+        "outputPath": "D:\\projects\\GreatMachine\\GreatMachine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",

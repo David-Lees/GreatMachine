@@ -15,6 +15,11 @@ namespace GreatMachine.Helpers
             return (int)Math.Floor(vector.Y * size.X + vector.X);
         }
 
-
+        public static Vector2 Convert1Dto2D(int offset, int width)
+        {            
+            int y = offset / width;
+            int x = offset - y;
+            return new Vector2(x, y);
+        }
     }
 }

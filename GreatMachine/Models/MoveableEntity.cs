@@ -8,6 +8,6 @@ namespace GreatMachine.Models
 
         public int Direction { get; set; }
 
-        public Vector2 OrthagonalVelicity { get; set; }
+        public Vector2 OrthagonalVelocity { get; set; }
     }
 }

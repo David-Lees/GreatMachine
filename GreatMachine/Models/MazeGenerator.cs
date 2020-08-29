@@ -1,118 +1,223 @@
 ﻿using GreatMachine.Helpers;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GreatMachine.Models
 {
-    enum CellState
+    enum Directions { North, East, South, West }
+
+    class MazeCell
     {
-        CELL_PATH_N = 0x01,
-        CELL_PATH_E = 0x02,
-        CELL_PATH_S = 0x04,
-        CELL_PATH_W = 0x08,
-        CELL_VISTED = 0x10,
+        private MazeCell north;
+        private MazeCell south;
+        private MazeCell east;
+        private MazeCell west;
+
+        public MazeCell North
+        {
+            get { return north; }
+            set
+            {
+                north = value;
+                value.south = this;
+            }
+        }
+        public MazeCell East
+        {
+            get { return east; }
+            set
+            {
+                east = value;
+                value.west = this;
+            }
+        }
+        public MazeCell South
+        {
+            get { return south; }
+            set
+            {
+                south = value;
+                value.north = this;
+            }
+        }
+        public MazeCell West
+        {
+            get { return west; }
+            set
+            {
+                west = value;
+                value.east = this;
+            }
+        }
+        public bool Visited { get; set; }
+
+        public int X { get; private set; }
+        public int Y { get; private set; }
+
+        public MazeCell(int x, int y)
+        {
+            X = x;
+            Y = y;
+            east = null;
+            north = null;
+            west = null;
+            south = null;
+            Visited = false;
+        }
     }
 
     public class MazeGenerator
     {
         private readonly int Width;
-        private readonly int[] Maze;
+        private readonly int Height;
+        private readonly List<MazeCell> Maze = new List<MazeCell>();
 
         private int P(int x, int y) => PositionHelper.Convert2Dto1D(x, y, Width);
 
-        private readonly Stack<Tuple<int, int>> stack;
-
-        public int[] GetMaze() => Maze;
-
         public MazeGenerator(int width, int height)
         {
-            var rand = new Random();
-            Width = width;            
-            Maze = new int[width * height];
-
-            stack = new Stack<Tuple<int, int>>();
-
-            stack.Push(new Tuple<int, int>(0, 0));
-            Maze[0] = (int)CellState.CELL_VISTED;
-            var VisitedCells = 1;
-
-            while (VisitedCells < width * height)
+            var rand = Main.Instance.Random;
+            Width = width;
+            Height = height;
+            for (int x = 0; x < width; x++)
             {
-                // create a set of the unvisted neighbours
-                var neighbours = new List<int>();
+                for (int y = 0; y < height; y++)
+                {
+                    Maze.Add(new MazeCell(x, y));
+                }
+            }
 
+            var stack = new Stack<MazeCell>();
+            var first = Maze.First();
+            first.Visited = true;
+            stack.Push(first);
+
+            int VisitedCells = 1;
+
+            while (stack.Count > 0)
+            {
+                var neighbours = new List<Directions>();
                 var currentItem = stack.Peek();
+                currentItem.Visited = true;
+                var x = currentItem.X;
+                var y = currentItem.Y;
 
-                // North neighbour
-                if (currentItem.Item2 > 0 && (Maze[P(currentItem.Item1, currentItem.Item2 - 1)] & (int)CellState.CELL_VISTED) == 0)
+                var north = Maze.SingleOrDefault(m => (m.X == x) && (m.Y == (y - 1)) && !m.Visited);
+                var east = Maze.SingleOrDefault(m => (m.X == (x + 1)) && (m.Y == y) && !m.Visited);
+                var south = Maze.SingleOrDefault(m => (m.X == x) && (m.Y == (y + 1)) && !m.Visited);
+                var west = Maze.SingleOrDefault(m => (m.X == (x - 1)) && (m.Y == y) && !m.Visited);
+
+                if (north != null) neighbours.Add(Directions.North);
+                if (south != null) neighbours.Add(Directions.South);
+                if (east != null) neighbours.Add(Directions.East);
+                if (west != null) neighbours.Add(Directions.West);
+
+                if (neighbours.Count > 0)
                 {
-                    neighbours.Add(0);
-                }
+                    var dir = neighbours[rand.Next(neighbours.Count)];
 
-                // East neighbour
-                if (currentItem.Item1 < width - 1 && (Maze[P(currentItem.Item1 + 1, currentItem.Item2)] & (int)CellState.CELL_VISTED) == 0)
-                {
-                    neighbours.Add(1);
-                }
-
-                // South neighbour
-                if (currentItem.Item2 < height - 1 && (Maze[P(currentItem.Item1, currentItem.Item2 + 1)] & (int)CellState.CELL_VISTED) == 0)
-                {
-                    neighbours.Add(2);
-                }
-
-                // West neighbour
-                if (currentItem.Item1 > 0 && (Maze[P(currentItem.Item1 - 1, currentItem.Item2)] & (int)CellState.CELL_VISTED) == 0)
-                {
-                    neighbours.Add(3);
-                }
-
-                if (!neighbours.Any())
-                {
-                    // Choose available neighbour at random
-                    int next_cell_dir = neighbours[rand.Next(0, neighbours.Count - 1)];
-
-                    // Create a path between the neighbout and hte current cell
-                    switch (next_cell_dir)
+                    // Create a path between the neighbour and the current cell                    
+                    switch (dir)
                     {
-                        case 0:
-                            Maze[P(currentItem.Item1, currentItem.Item2)] |= (int)CellState.CELL_PATH_N;
-                            Maze[P(currentItem.Item1, currentItem.Item2 -1)] |= (int)CellState.CELL_PATH_S;
-                            stack.Push(new Tuple<int, int>(currentItem.Item1, currentItem.Item2 - 1));
+                        case Directions.North:
+                            currentItem.North = north;
+                            stack.Push(north);
                             break;
 
-                        case 1:
-                            Maze[P(currentItem.Item1, currentItem.Item2)] |= (int)CellState.CELL_PATH_E;
-                            Maze[P(currentItem.Item1 - 1, currentItem.Item2)] |= (int)CellState.CELL_PATH_W;
-                            stack.Push(new Tuple<int, int>(currentItem.Item1 + 1, currentItem.Item2));
+                        case Directions.East:
+                            currentItem.East = east;
+                            stack.Push(east);
                             break;
 
-                        case 2:
-                            Maze[P(currentItem.Item1, currentItem.Item2)] |= (int)CellState.CELL_PATH_S;
-                            Maze[P(currentItem.Item1, currentItem.Item2 + 1)] |= (int)CellState.CELL_PATH_N;
-                            stack.Push(new Tuple<int, int>(currentItem.Item1, currentItem.Item2 + 1));
+                        case Directions.South:
+                            currentItem.South = south;
+                            stack.Push(south);
                             break;
 
-                        case 3:
-                            Maze[P(currentItem.Item1, currentItem.Item2)] |= (int)CellState.CELL_PATH_W;
-                            Maze[P(currentItem.Item1 + 1, currentItem.Item2)] |= (int)CellState.CELL_PATH_E;
-                            stack.Push(new Tuple<int, int>(currentItem.Item1 - 1, currentItem.Item2));
+                        case Directions.West:
+                            currentItem.West = west;
+                            stack.Push(west);
                             break;
                     }
-
                     VisitedCells++;
-                    Maze[P(currentItem.Item1, currentItem.Item2)] |= (int)CellState.CELL_VISTED;
                 }
                 else
                 {
-                    stack.Pop(); // backtrack
+                    break;
+                    //stack.Pop(); // backtrack
                 }
-
             }
         }
-        
+
+        public List<BaseEntity> GetWalls(int cellsize)
+        {
+            var wallCoords = new HashSet<Tuple<int, int>>();
+            var walls = new List<BaseEntity>();
+
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    var sector = Maze[P(x, y)];
+
+                    // Debug: add text
+                    walls.Add(new TextEntity(
+                        x * (cellsize + 1) + 1,
+                        y * (cellsize + 1) + 1,
+                        $"{x},{y}" +
+                        $"{(sector.North != null ? " N" + " " + sector.North.X + ", " + sector.North.Y : " ")}" +
+                        $"{(sector.East != null ? " E" + " " + sector.East.X + ", " + sector.East.Y : " ")}" +
+                        $"{(sector.South != null ? " S" + " " + sector.South.X + ", " + sector.South.Y : " ")}" +
+                        $"{(sector.West != null ? " W" + " " + sector.West.X + ", " + sector.West.Y : " ")}"));
+
+                    for (int j = 0; j < cellsize; j++)
+                    {
+                        if (sector.North == null)
+                        {
+                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + j, y * (cellsize + 1) - 1));
+                        }
+
+                        if (sector.East == null)
+                        {
+                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) + j));
+                        }
+                        if (sector.South == null)
+                        {
+                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + j, y * (cellsize + 1) + cellsize));
+                        }
+                        if (sector.West == null)
+                        {
+                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) - 1, y * (cellsize + 1) + j));
+                        }
+                    }
+                    if (sector.South == null || sector.East == null)
+                    {
+                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) + cellsize));
+                    }
+                    if (sector.North == null || sector.East == null)
+                    {
+                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) - 1));
+                    }
+                    if (sector.North == null || sector.West == null)
+                    {
+                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) - 1, y * (cellsize + 1) - 1));
+                    }
+                    if (sector.South == null || sector.West == null)
+                    {
+                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) - 1, y * (cellsize + 1) + cellsize));
+                    }
+                }
+            }
+
+            foreach (var c in wallCoords)
+            {
+                walls.Add(new Wall(c.Item1 + 1, c.Item2 + 1));
+            }
+
+            return walls;
+        }
+
+
     }
 }

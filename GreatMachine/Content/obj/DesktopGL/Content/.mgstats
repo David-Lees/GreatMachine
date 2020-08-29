@@ -1,1 +1,5 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"D:/projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bugs/Bugs.xnb","TextureProcessor","Texture2DContent",8830,393301,0.3609426
+"D:/projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/DefaultFont.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21538,0.2927514
+"D:/projects/GreatMachine/GreatMachine/Content/Player/Player.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Player/Player.xnb","TextureProcessor","Texture2DContent",439,16469,0.0274435
+"D:/projects/GreatMachine/GreatMachine/Content/Walls/wall1.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Walls/wall1.xnb","TextureProcessor","Texture2DContent",8297,16469,0.0087453

@@ -21,3 +21,7 @@ D:\Projects\GreatMachine\GreatMachine\obj\Debug\netcoreapp3.1\GreatMachine.cspro
 D:\Projects\GreatMachine\GreatMachine\obj\Debug\netcoreapp3.1\GreatMachine.dll
 D:\Projects\GreatMachine\GreatMachine\obj\Debug\netcoreapp3.1\GreatMachine.pdb
 D:\Projects\GreatMachine\GreatMachine\obj\Debug\netcoreapp3.1\GreatMachine.genruntimeconfig.cache
+D:\Projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Bugs\Bugs.xnb
+D:\Projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Player\Player.xnb
+D:\Projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Walls\wall1.xnb
+D:\projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\DefaultFont.xnb
