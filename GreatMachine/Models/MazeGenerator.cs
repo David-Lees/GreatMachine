@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GreatMachine.Models
 {
@@ -9,47 +10,11 @@ namespace GreatMachine.Models
 
     class MazeCell
     {
-        private MazeCell north;
-        private MazeCell south;
-        private MazeCell east;
-        private MazeCell west;
-
-        public MazeCell North
-        {
-            get { return north; }
-            set
-            {
-                north = value;
-                value.south = this;
-            }
-        }
-        public MazeCell East
-        {
-            get { return east; }
-            set
-            {
-                east = value;
-                value.west = this;
-            }
-        }
-        public MazeCell South
-        {
-            get { return south; }
-            set
-            {
-                south = value;
-                value.north = this;
-            }
-        }
-        public MazeCell West
-        {
-            get { return west; }
-            set
-            {
-                west = value;
-                value.east = this;
-            }
-        }
+        public int? North { get; set; }
+        public int? South { get; set; }
+        public int? East { get; set; }
+        public int? West { get; set; }
+             
         public bool Visited { get; set; }
 
         public int X { get; private set; }
@@ -59,10 +24,10 @@ namespace GreatMachine.Models
         {
             X = x;
             Y = y;
-            east = null;
-            north = null;
-            west = null;
-            south = null;
+            East = null;
+            North = null;
+            West = null;
+            South = null;
             Visited = false;
         }
     }
@@ -71,7 +36,7 @@ namespace GreatMachine.Models
     {
         private readonly int Width;
         private readonly int Height;
-        private readonly List<MazeCell> Maze = new List<MazeCell>();
+        private readonly MazeCell[] Maze;
 
         private int P(int x, int y) => PositionHelper.Convert2Dto1D(x, y, Width);
 
@@ -79,17 +44,18 @@ namespace GreatMachine.Models
         {
             var rand = Main.Instance.Random;
             Width = width;
-            Height = height;
+            Height = height;            
+            Maze = new MazeCell[width * height];
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    Maze.Add(new MazeCell(x, y));
+                    Maze[P(x, y)] = new MazeCell(x, y);
                 }
             }
 
             var stack = new Stack<MazeCell>();
-            var first = Maze.First();
+            var first = Maze[0];
             first.Visited = true;
             stack.Push(first);
 
@@ -99,6 +65,7 @@ namespace GreatMachine.Models
             {
                 var neighbours = new List<Directions>();
                 var currentItem = stack.Peek();
+                var index = Array.IndexOf(Maze, currentItem);
                 currentItem.Visited = true;
                 var x = currentItem.X;
                 var y = currentItem.Y;
@@ -121,32 +88,42 @@ namespace GreatMachine.Models
                     switch (dir)
                     {
                         case Directions.North:
-                            currentItem.North = north;
+                            if (north != null) currentItem.North = Array.IndexOf(Maze, north);
                             stack.Push(north);
                             break;
 
                         case Directions.East:
-                            currentItem.East = east;
+                            if (east != null) currentItem.East = Array.IndexOf(Maze, east);
                             stack.Push(east);
                             break;
 
                         case Directions.South:
-                            currentItem.South = south;
+                            if (south != null) currentItem.South = Array.IndexOf(Maze, south);
                             stack.Push(south);
                             break;
 
                         case Directions.West:
-                            currentItem.West = west;
+                            if (west != null) currentItem.West = Array.IndexOf(Maze, west);
                             stack.Push(west);
                             break;
                     }
                     VisitedCells++;
                 }
                 else
-                {
-                    break;
-                    //stack.Pop(); // backtrack
+                {                    
+                    stack.Pop(); // backtrack
                 }
+                Maze[index] = currentItem;
+            }
+
+            // Invert links
+            for(int i = 0; i < width * height; i++)
+            {
+                var item = Maze[i];
+                if (item.North.HasValue) Maze[item.North.Value].South = i;
+                if (item.South.HasValue) Maze[item.South.Value].North = i;
+                if (item.East.HasValue) Maze[item.East.Value].West = i;
+                if (item.West.HasValue) Maze[item.West.Value].East = i;
             }
         }
 
@@ -161,15 +138,31 @@ namespace GreatMachine.Models
                 {
                     var sector = Maze[P(x, y)];
 
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append($"{x},{y}");                    
+                    if (sector.North != null)
+                    {
+                        var tn = Maze[sector.North.Value];
+                        sb.Append($" N {tn.X},{tn.Y};");
+                    }
+                    if (sector.South != null)
+                    {
+                        var ts = Maze[sector.South.Value];
+                        sb.Append($" S {ts.X},{ts.Y};");
+                    }
+                    if (sector.East != null)
+                    {
+                        var te = Maze[sector.East.Value];
+                        sb.Append($" E {te.X},{te.Y};");
+                    }
+                    if (sector.West != null)
+                    {
+                        var tw = Maze[sector.West.Value];
+                        sb.Append($" W {tw.X},{tw.Y};");
+                    }
+
                     // Debug: add text
-                    walls.Add(new TextEntity(
-                        x * (cellsize + 1) + 1,
-                        y * (cellsize + 1) + 1,
-                        $"{x},{y}" +
-                        $"{(sector.North != null ? " N" + " " + sector.North.X + ", " + sector.North.Y : " ")}" +
-                        $"{(sector.East != null ? " E" + " " + sector.East.X + ", " + sector.East.Y : " ")}" +
-                        $"{(sector.South != null ? " S" + " " + sector.South.X + ", " + sector.South.Y : " ")}" +
-                        $"{(sector.West != null ? " W" + " " + sector.West.X + ", " + sector.West.Y : " ")}"));
+                    walls.Add(new TextEntity(x * (cellsize + 1) + 1, y * (cellsize + 1) + 1, sb.ToString()));
 
                     for (int j = 0; j < cellsize; j++)
                     {

@@ -89,7 +89,7 @@ namespace GreatMachine
 
         private void CreateLevel()
         {
-            var width = 5;
+            var width = 40;
             var height = width * 9  / 16;
             SectorCountX = width * 6 + 1;
             SectorCountY = height * 6 + 1;
