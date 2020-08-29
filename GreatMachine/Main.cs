@@ -28,7 +28,7 @@ namespace GreatMachine
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private readonly List<BaseEntity> Entities = new List<BaseEntity>();
+        public readonly List<BaseEntity> Entities = new List<BaseEntity>();
         private readonly List<MoveableEntity> Movables = new List<MoveableEntity>();
         private readonly Player player = new Player();
 
@@ -47,7 +47,12 @@ namespace GreatMachine
         public TouchCollection TouchInput { get; set; }
         public MouseState MouseInput { get; set; }
 
+        public int ScreenWidth { get; set; }
+        public int ScreenHeight { get; set; }
+
         private readonly FrameCounter _frameCounter = new FrameCounter();
+
+        private Camera camera;
 
         public Main()
         {
@@ -63,6 +68,9 @@ namespace GreatMachine
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+
+            ScreenWidth = _graphics.PreferredBackBufferWidth;
+            ScreenHeight = _graphics.PreferredBackBufferHeight;
 
             base.Initialize();
         }
@@ -83,20 +91,22 @@ namespace GreatMachine
 
             player.SpriteSheet = PlayerSheet;
             player.Health = 100;
+            camera = new Camera();
+            camera.Follow(player);
+
 
             CreateLevel();
         }
 
         private void CreateLevel()
         {
-            var width = 40;
+            var width = 45;
             var height = width * 9  / 16;
             SectorCountX = width * 6 + 1;
-            SectorCountY = height * 6 + 1;
-            var cellsize = 5;
+            SectorCountY = height * 6 + 1;            
             sectors = new int[SectorCountX * SectorCountY];
 
-            player.Position = new Vector2(width * (cellsize + 1) / 2, height * (cellsize + 1) / 2);
+            player.Position = new Vector2(SectorCountX / 2 + 0.5f, SectorCountY / 2 + 0.5f);
 
             Entities.Clear();
             var maze = new MazeGenerator(width, height);
@@ -115,6 +125,8 @@ namespace GreatMachine
                 Exit();            
 
             HandleInput(gameTime);
+
+            camera.Follow(player);
 
             base.Update(gameTime);
         }
@@ -141,6 +153,7 @@ namespace GreatMachine
 
             Zoomed = KeyboardInput.IsKeyDown(Keys.Z);
             Scale = Zoomed ? (float)_graphics.PreferredBackBufferWidth / (SectorCountX * SectorSize) : 1.0f;
+            camera.Zoom = Zoomed ? 0.5f : 0;
 
             ViewPortOrigin = origin;
 
@@ -156,7 +169,8 @@ namespace GreatMachine
 
             GraphicsDevice.Clear(Color.CornflowerBlue);            
 
-            _spriteBatch.Begin();
+            // World objects
+            _spriteBatch.Begin(transformMatrix: camera.Transform);
 
             foreach (var e in Entities)
             {
@@ -165,8 +179,13 @@ namespace GreatMachine
 
             player.Draw(gameTime, _spriteBatch);
 
-            _spriteBatch.DrawString(DefaultFont, fps, new Vector2(1, 1), Color.Red);
+            
 
+            _spriteBatch.End();
+
+            // overlays
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(DefaultFont, fps, new Vector2(1, 1), Color.Red);
             _spriteBatch.End();
 
 

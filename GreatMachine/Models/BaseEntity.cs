@@ -19,13 +19,19 @@ namespace GreatMachine.Models
 
         public SpriteSheet SpriteSheet { get; set; }
 
+        public Rectangle BoundingBox { get; set; }
+
+        public bool IsCircle { get; set; } = false;
+
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var pos = (Position - Main.Instance.ViewPortOrigin) * Main.Instance.Scale * Main.Instance.SectorSize;            
+            var pos = Position * Main.Instance.SectorSize;
+
+            BoundingBox = new Rectangle(pos.ToPoint(), new Point(SpriteSheet.SpriteWidth, SpriteSheet.SpriteHeight));
 
             spriteBatch.Draw(
                 SpriteSheet.Texture, 
-                new Rectangle(pos.ToPoint(), new Point((int)(SpriteSheet.SpriteWidth * Main.Instance.Scale), (int)(SpriteSheet.SpriteHeight * Main.Instance.Scale))), 
+                BoundingBox, 
                 SpriteSheet.SourceRectangle("Sprite000"), 
                 Color.White);         
         }

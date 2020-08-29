@@ -16,7 +16,7 @@ namespace GreatMachine.Models
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var pos = (Position - Main.Instance.ViewPortOrigin) * Main.Instance.Scale * Main.Instance.SectorSize;
+            var pos = Position * Main.Instance.SectorSize;            
             spriteBatch.DrawString(Main.Instance.DefaultFont, Text, pos, Color.Black);            
         }
     }    
