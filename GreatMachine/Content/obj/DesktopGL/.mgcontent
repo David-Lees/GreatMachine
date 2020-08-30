@@ -5,11 +5,15 @@
   <Config />
   <SourceFiles>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Crosshairs.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/wall1.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File>DefaultFont.spritefont</File>
     <File xsi:nil="true" />

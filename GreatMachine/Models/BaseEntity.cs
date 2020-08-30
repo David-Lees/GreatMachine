@@ -1,6 +1,7 @@
 ﻿using GreatMachine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace GreatMachine.Models
 {
@@ -9,29 +10,30 @@ namespace GreatMachine.Models
         /// <summary>
         /// Pixel Coordinates in World
         /// </summary>
-        public Vector2 Position { get; set; }
+        private Vector2 _position;
+        public Vector2 Position
+        {
+            get { return _position; }
+            set
+            {
+                _position = value;
+                Sector = PositionHelper.GetSector(Position);
+                SurroundingSectors = PositionHelper.SurroundingSectors(Position);
+            }
+        }
+        
+        public ICollection<int> SurroundingSectors { get; private set; }
 
         /// <summary>
         /// Sector Number that the object resides in
         /// </summary>        
-        public int Sector 
-        { 
-            get
-            {
-                var sectorSize = Main.Instance.SectorSize;
-                var w = Main.Instance.SectorCountX;
-                return PositionHelper.Convert2Dto1D(
-                    (int)Position.X / sectorSize,
-                    (int)Position.Y / sectorSize,
-                    w);
-            }
-        }
+        public int Sector { get; private set; }
 
         public bool Invulnerable { get; set; }
 
         public int Health { get; set; }
 
-        public int Lifespan { get; set; }
+        public double Lifespan { get; set; }
 
         public bool IsDead => !Invulnerable && Health < 0;
 
@@ -48,7 +50,7 @@ namespace GreatMachine.Models
                 var pos = Position - offset;
 
                 return new Rectangle(
-                    pos.ToPoint(), 
+                    pos.ToPoint(),
                     new Point(SpriteSheet.SpriteWidth, SpriteSheet.SpriteHeight));
             }
         }
@@ -63,12 +65,17 @@ namespace GreatMachine.Models
         public string SpriteName { get; set; } = "Sprite000";
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {                       
+        {
             spriteBatch.Draw(
                 SpriteSheet.Texture,
                 BoundingBox,
                 SpriteSheet.SourceRectangle(SpriteName),
                 Color.White);
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+
         }
     }
 }

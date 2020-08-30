@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace GreatMachine.Helpers
 {
@@ -20,6 +21,50 @@ namespace GreatMachine.Helpers
             int x = offset % width;
             int y = offset / width;            
             return new Vector2(x, y);
+        }
+
+        public static int GetSector(Vector2 position)
+        {
+            return Convert2Dto1D(
+                (int)position.X / Main.Instance.SectorSize,
+                (int)position.Y / Main.Instance.SectorSize,
+                Main.Instance.SectorCountX);
+        }
+
+        public static ICollection<int> SurroundingSectors(Vector2 position)
+        {
+            return new HashSet<int>
+            {
+                GetSector(position + new Vector2(-2,-2)),
+                GetSector(position + new Vector2(-1,-2)),
+                GetSector(position + new Vector2(0,-2)),
+                GetSector(position + new Vector2(1,-2)),
+                GetSector(position + new Vector2(2,-2)),
+
+                GetSector(position + new Vector2(-2,-1)),
+                GetSector(position + new Vector2(-1,-1)),
+                GetSector(position + new Vector2(0,-1)),
+                GetSector(position + new Vector2(1,-1)),
+                GetSector(position + new Vector2(2,-1)),
+
+                GetSector(position + new Vector2(-2,0)),
+                GetSector(position + new Vector2(-1,0)),
+                GetSector(position),
+                GetSector(position + new Vector2(1,0)),
+                GetSector(position + new Vector2(2,0)),
+
+                GetSector(position + new Vector2(-2,1)),
+                GetSector(position + new Vector2(-1,1)),
+                GetSector(position + new Vector2(0,1)),
+                GetSector(position + new Vector2(1,1)),
+                GetSector(position + new Vector2(2,1)),
+
+                GetSector(position + new Vector2(-2,2)),
+                GetSector(position + new Vector2(-1,2)),
+                GetSector(position + new Vector2(0,2)),
+                GetSector(position + new Vector2(1,2)),
+                GetSector(position + new Vector2(2,2)),
+            };
         }
     }
 }

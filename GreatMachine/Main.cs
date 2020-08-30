@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GreatMachine
 {
@@ -35,10 +36,15 @@ namespace GreatMachine
         private Texture2D BugsTexture;
         private Texture2D PlayerTexture;
         private Texture2D WallTexture;
+        private Texture2D BulletTexture;
+        private Texture2D CursorTexture;
 
         private SpriteSheet BugsSheet;
         private SpriteSheet PlayerSheet;
         private SpriteSheet WallSheet;
+        private SpriteSheet CursorSheet;
+
+        public SpriteSheet BulletSheet { get; set; }
 
         public SpriteFont DefaultFont { get; set; }
 
@@ -48,7 +54,7 @@ namespace GreatMachine
         public MouseState MouseInput { get; set; }
 
         private GamePadState previousGamePadInput { get; set; }
-        private KeyboardState previousKeyboardInput { get; set; }
+        private KeyboardState PreviousKeyboardInput { get; set; }
         private TouchCollection previousTouchInput { get; set; }
         private MouseState previousMouseInput { get; set; }
 
@@ -56,8 +62,11 @@ namespace GreatMachine
         public int ScreenHeight { get; set; }
 
         private readonly FrameCounter _frameCounter = new FrameCounter();
+        private readonly FrameCounter _updateCounter = new FrameCounter();
 
-        private Camera camera;
+        private Cursor Cursor { get; set; }
+
+        public Camera Camera { get; set; }
 
         public Main()
         {
@@ -89,16 +98,21 @@ namespace GreatMachine
             BugsTexture = Content.Load<Texture2D>("Bugs/Bugs");
             PlayerTexture = Content.Load<Texture2D>("Player/Player");
             WallTexture = Content.Load<Texture2D>("Walls/wall1");
+            BulletTexture = Content.Load<Texture2D>("Bullets/bullet");
+            CursorTexture = Content.Load<Texture2D>("Crosshairs");
 
             BugsSheet = new SpriteSheet(BugsTexture).GenerateIndexes(32, 32, 9, 4);
             PlayerSheet = new SpriteSheet(PlayerTexture).GenerateIndexes(64, 64, 1, 1);
             WallSheet = new SpriteSheet(WallTexture).GenerateIndexes(64, 64, 1, 1);
+            BulletSheet = new SpriteSheet(BulletTexture).GenerateIndexes(8, 8, 1, 1);
+            CursorSheet = new SpriteSheet(CursorTexture).GenerateIndexes(32, 32, 1, 1);
 
             player.SpriteSheet = PlayerSheet;
             player.Health = 100;
-            camera = new Camera();
-            camera.Follow(player);
+            Camera = new Camera();
+            Camera.Follow(player);
 
+            Cursor = new Cursor(CursorSheet);
 
             CreateLevel();
         }
@@ -123,16 +137,27 @@ namespace GreatMachine
                 wall.SpriteSheet = WallSheet;
             }
             Entities.AddRange(walls);
+            Entities.Add(player);
         }
 
         protected override void Update(GameTime gameTime)
         {
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _updateCounter.Update(deltaTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();            
 
             HandleInput(gameTime);
 
-            camera.Follow(player);
+            Camera.Follow(player);
+
+            foreach(var e in Entities.Where(e => e != player).ToList())
+            {
+                e.Update(gameTime);
+            }
+
+            Cursor.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -157,18 +182,18 @@ namespace GreatMachine
             if (KeyboardInput.IsKeyDown(Keys.OemPlus)) Scale *= 1.1f;
             if (KeyboardInput.IsKeyDown(Keys.OemMinus)) Scale *= 0.9f;
 
-            if (KeyboardInput.IsKeyDown(Keys.R) && previousKeyboardInput.IsKeyUp(Keys.R)) CreateLevel();
+            if (KeyboardInput.IsKeyDown(Keys.R) && PreviousKeyboardInput.IsKeyUp(Keys.R)) CreateLevel();
 
-            if (KeyboardInput.IsKeyDown(Keys.Z) && previousKeyboardInput.IsKeyUp(Keys.Z)) Zoomed = !Zoomed;
+            if (KeyboardInput.IsKeyDown(Keys.Z) && PreviousKeyboardInput.IsKeyUp(Keys.Z)) Zoomed = !Zoomed;
             Scale = Zoomed ? (float)_graphics.PreferredBackBufferWidth / (SectorCountX * SectorSize) : 1.0f;
-            camera.Zoom = Zoomed ? 0.5f : 0;
+            Camera.Zoom = Zoomed ? 0.5f : 0;
 
             ViewPortOrigin = origin;
 
-            player.UpdatePosition(gameTime);
+            player.Update(gameTime);
 
             previousGamePadInput = GamePadInput;
-            previousKeyboardInput = KeyboardInput;
+            PreviousKeyboardInput = KeyboardInput;
             previousMouseInput = MouseInput;
             previousTouchInput = TouchInput;
         }
@@ -178,27 +203,27 @@ namespace GreatMachine
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _frameCounter.Update(deltaTime);
-            var fps = $"FPS: {_frameCounter.AverageFramesPerSecond:.00}; Scale: {Scale:.00}";
+            var fps = $"FPS: {_frameCounter.AverageFramesPerSecond:.00}; " +
+                $"TPS: {_updateCounter.AverageFramesPerSecond:.00}; " +
+                $"Scale: {Scale:.00}";
 
             GraphicsDevice.Clear(Color.CornflowerBlue);            
 
             // World objects
-            _spriteBatch.Begin(transformMatrix: camera.Transform);
+            _spriteBatch.Begin(transformMatrix: Camera.Transform);
 
             foreach (var e in Entities)
             {
                 e.Draw(gameTime, _spriteBatch);
             }
 
-            player.Draw(gameTime, _spriteBatch);
-
-            
+            Cursor.Draw(gameTime, _spriteBatch);
 
             _spriteBatch.End();
 
             // overlays
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(DefaultFont, fps, new Vector2(1, 1), Color.Red);
+            _spriteBatch.DrawString(DefaultFont, fps, new Vector2(1, 1), Color.Red);            
             _spriteBatch.End();
 
 

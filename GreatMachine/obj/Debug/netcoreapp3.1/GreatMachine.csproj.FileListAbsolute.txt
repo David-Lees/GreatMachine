@@ -25,3 +25,5 @@ D:\Projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Bugs\Bugs.
 D:\Projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Player\Player.xnb
 D:\Projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Walls\wall1.xnb
 D:\projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\DefaultFont.xnb
+D:\projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Bullets\bullet.xnb
+D:\projects\GreatMachine\GreatMachine\bin\Debug\netcoreapp3.1\Content\Crosshairs.xnb
