@@ -205,7 +205,10 @@ namespace GreatMachine.Models
 
             foreach (var c in wallCoords)
             {
-                walls.Add(new Wall(c.Item1 + 1, c.Item2 + 1));
+                walls.Add(
+                    new Wall(
+                        (c.Item1 + 1) * Main.Instance.SectorSize, 
+                        (c.Item2 + 1) * Main.Instance.SectorSize));
             }
 
             return walls;

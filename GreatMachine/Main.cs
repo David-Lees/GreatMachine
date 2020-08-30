@@ -47,6 +47,11 @@ namespace GreatMachine
         public TouchCollection TouchInput { get; set; }
         public MouseState MouseInput { get; set; }
 
+        private GamePadState previousGamePadInput { get; set; }
+        private KeyboardState previousKeyboardInput { get; set; }
+        private TouchCollection previousTouchInput { get; set; }
+        private MouseState previousMouseInput { get; set; }
+
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
 
@@ -106,7 +111,9 @@ namespace GreatMachine
             SectorCountY = height * 6 + 1;            
             sectors = new int[SectorCountX * SectorCountY];
 
-            player.Position = new Vector2(SectorCountX / 2 + 0.5f, SectorCountY / 2 + 0.5f);
+            player.Position = new Vector2(
+                SectorCountX * SectorSize / 2 + (SectorSize / 2), 
+                SectorCountY * SectorSize / 2 + (SectorSize / 2));
 
             Entities.Clear();
             var maze = new MazeGenerator(width, height);
@@ -114,7 +121,6 @@ namespace GreatMachine
             foreach (var wall in walls)
             {
                 wall.SpriteSheet = WallSheet;
-                wall.Position += new Vector2(1, 1);
             }
             Entities.AddRange(walls);
         }
@@ -151,13 +157,20 @@ namespace GreatMachine
             if (KeyboardInput.IsKeyDown(Keys.OemPlus)) Scale *= 1.1f;
             if (KeyboardInput.IsKeyDown(Keys.OemMinus)) Scale *= 0.9f;
 
-            Zoomed = KeyboardInput.IsKeyDown(Keys.Z);
+            if (KeyboardInput.IsKeyDown(Keys.R) && previousKeyboardInput.IsKeyUp(Keys.R)) CreateLevel();
+
+            if (KeyboardInput.IsKeyDown(Keys.Z) && previousKeyboardInput.IsKeyUp(Keys.Z)) Zoomed = !Zoomed;
             Scale = Zoomed ? (float)_graphics.PreferredBackBufferWidth / (SectorCountX * SectorSize) : 1.0f;
             camera.Zoom = Zoomed ? 0.5f : 0;
 
             ViewPortOrigin = origin;
 
             player.UpdatePosition(gameTime);
+
+            previousGamePadInput = GamePadInput;
+            previousKeyboardInput = KeyboardInput;
+            previousMouseInput = MouseInput;
+            previousTouchInput = TouchInput;
         }
 
 

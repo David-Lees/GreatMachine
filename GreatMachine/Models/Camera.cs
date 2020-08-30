@@ -11,8 +11,8 @@ namespace GreatMachine.Models
         public void Follow(BaseEntity target)
         {
             var position = Matrix.CreateTranslation(
-              (-target.Position.X * Main.Instance.SectorSize) - (target.BoundingBox.Width / 2),
-              (-target.Position.Y * Main.Instance.SectorSize) - (target.BoundingBox.Height / 2),
+              -target.Position.X - (target.BoundingBox.Width / 2),
+              -target.Position.Y - (target.BoundingBox.Height / 2),
               0);
 
             var offset = Matrix.CreateTranslation(

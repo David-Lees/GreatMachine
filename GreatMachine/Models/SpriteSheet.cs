@@ -12,6 +12,17 @@ namespace GreatMachine.Models
         public int SpriteWidth { get; set; }
         public int SpriteHeight { get; set; }
 
+        /// <summary>
+        /// Used for unit testing
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        public SpriteSheet(int w, int h)
+        {
+            SpriteWidth = w;
+            SpriteHeight = h;
+        }
+
         public SpriteSheet(Texture2D texture)
         {
             Texture = texture;

@@ -1,11 +1,6 @@
 D:\Projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.csprojAssemblyReference.cache
 D:\Projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.AssemblyInfoInputs.cache
 D:\Projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.AssemblyInfo.cs
-D:\Projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.csproj.CoreCompileInputs.cache
-D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Bugs\Bugs.xnb
-D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\DefaultFont.xnb
-D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Player\Player.xnb
-D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Walls\wall1.xnb
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\GreatMachine.exe
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\NUnit3.TestAdapter.dll
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\NUnit3.TestAdapter.pdb
@@ -110,3 +105,10 @@ D:\projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine
 D:\projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.dll
 D:\projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.pdb
 D:\projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.genruntimeconfig.cache
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Bugs\Bugs.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\DefaultFont.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Player\Player.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Walls\wall1.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Castle.Core.dll
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Moq.dll
+D:\projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.csproj.CoreCompileInputs.cache

@@ -16,9 +16,9 @@ namespace GreatMachine.Helpers
         }
 
         public static Vector2 Convert1Dto2D(int offset, int width)
-        {            
-            int y = offset / width;
-            int x = offset - y;
+        {
+            int x = offset % width;
+            int y = offset / width;            
             return new Vector2(x, y);
         }
     }
