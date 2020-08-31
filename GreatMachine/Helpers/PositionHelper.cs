@@ -19,16 +19,20 @@ namespace GreatMachine.Helpers
         public static Vector2 Convert1Dto2D(int offset, int width)
         {
             int x = offset % width;
-            int y = offset / width;            
+            int y = offset / width;
             return new Vector2(x, y);
         }
 
         public static int GetSector(Vector2 position)
         {
-            return Convert2Dto1D(
-                (int)position.X / Main.Instance.SectorSize,
-                (int)position.Y / Main.Instance.SectorSize,
-                Main.Instance.SectorCountX);
+            if (Main.Instance != null)
+            {
+                return Convert2Dto1D(
+                    (int)position.X / Main.Instance.SectorSize,
+                    (int)position.Y / Main.Instance.SectorSize,
+                    Main.Instance.SectorCountX);
+            }
+            else return 0;
         }
 
         public static ICollection<int> SurroundingSectors(Vector2 position)

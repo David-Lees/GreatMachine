@@ -1,4 +1,5 @@
-﻿using GreatMachine.Models;
+﻿using GreatMachine.Helpers;
+using GreatMachine.Models;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -57,6 +58,8 @@ namespace GreatMachine
         private KeyboardState PreviousKeyboardInput { get; set; }
         private TouchCollection previousTouchInput { get; set; }
         private MouseState previousMouseInput { get; set; }
+
+        public List<LineSegment> Lines { get; set; } = new List<LineSegment>();
 
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
@@ -129,6 +132,8 @@ namespace GreatMachine
                 SectorCountX * SectorSize / 2 + (SectorSize / 2), 
                 SectorCountY * SectorSize / 2 + (SectorSize / 2));
 
+            player.OldPosition = player.Position;
+
             Entities.Clear();
             var maze = new MazeGenerator(width, height);
             var walls = maze.GetWalls(5);
@@ -138,6 +143,16 @@ namespace GreatMachine
             }
             Entities.AddRange(walls);
             Entities.Add(player);
+
+            Lines.Clear();            
+            foreach (var wall in walls)
+            {
+                var bb = wall.BoundingBox;
+                Lines.Add(new LineSegment(bb.Left, bb.Top, bb.Right, bb.Top, wall.Sector));
+                Lines.Add(new LineSegment(bb.Right, bb.Top, bb.Right, bb.Bottom, wall.Sector));
+                Lines.Add(new LineSegment(bb.Right, bb.Bottom, bb.Left, bb.Bottom, wall.Sector));
+                Lines.Add(new LineSegment(bb.Left, bb.Bottom, bb.Left, bb.Top, wall.Sector));
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -149,6 +164,8 @@ namespace GreatMachine
                 Exit();            
 
             HandleInput(gameTime);
+
+            CollisionHelper.CalculateCollisions(Entities, gameTime);
 
             Camera.Follow(player);
 

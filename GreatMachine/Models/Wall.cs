@@ -7,7 +7,7 @@ namespace GreatMachine.Models
         public Wall(int x, int y)
         {
             Position = new Vector2(x, y);
-            Invulnerable = true;
+            Invulnerable = true;            
         }
     }
 }

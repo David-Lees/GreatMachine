@@ -113,3 +113,4 @@ D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Castle.Core.
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Moq.dll
 D:\projects\GreatMachine\GreatMachine.Tests\obj\Debug\netcoreapp3.1\GreatMachine.Tests.csproj.CoreCompileInputs.cache
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Bullets\bullet.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Crosshairs.xnb

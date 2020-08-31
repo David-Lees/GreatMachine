@@ -12,6 +12,8 @@ namespace GreatMachine.Models
         public int SpriteWidth { get; set; }
         public int SpriteHeight { get; set; }
 
+        public float Radius { get; set; }
+
         /// <summary>
         /// Used for unit testing
         /// </summary>
@@ -21,6 +23,7 @@ namespace GreatMachine.Models
         {
             SpriteWidth = w;
             SpriteHeight = h;
+            Radius = w / 2.0f;
         }
 
         public SpriteSheet(Texture2D texture)
@@ -38,6 +41,7 @@ namespace GreatMachine.Models
         {
             SpriteWidth = width;
             SpriteHeight = height;
+            Radius = width / 2.0f;
             int i = 0;
 
             for (int y = 0; y < yCount; y++)

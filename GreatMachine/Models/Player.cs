@@ -1,19 +1,19 @@
-﻿using GreatMachine.Helpers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 
 namespace GreatMachine.Models
 {
     public class Player : MoveableEntity
     {
-        const double Speed = 500;
+        const double Speed = 0.001;
 
         public Player()
         {
             IsCircle = true;
+            Mass = 100f;
+            Velocity = Vector2.Zero;
         }
 
         public Vector2 Target { get; set; }
@@ -33,51 +33,60 @@ namespace GreatMachine.Models
             }
             Cooldown = (int)Math.Max(Cooldown - gameTime.ElapsedGameTime.TotalMilliseconds, 0);
 
-            var pos = new Vector2(Position.X, Position.Y);
-            var originalPos = new Vector2(Position.X, Position.Y);
+            // var pos = new Vector2(Position.X, Position.Y);
+            // var originalPos = new Vector2(Position.X, Position.Y);
 
+            Velocity = Vector2.Zero;
             if (keys.IsKeyDown(Keys.Left) || keys.IsKeyDown(Keys.A) || pad.DPad.Left == ButtonState.Pressed)
-                pos.X -= (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                //  pos.X -= (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                Velocity += new Vector2((float)(Speed * gameTime.ElapsedGameTime.TotalMilliseconds), 0);
 
             if (keys.IsKeyDown(Keys.Right) || keys.IsKeyDown(Keys.D) || pad.DPad.Right == ButtonState.Pressed)
-                pos.X += (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                //pos.X += (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                Velocity += new Vector2((float)(-Speed * gameTime.ElapsedGameTime.TotalMilliseconds), 0);
 
             if (keys.IsKeyDown(Keys.Up) || keys.IsKeyDown(Keys.W) || pad.DPad.Up == ButtonState.Pressed)
-                pos.Y -= (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                // pos.Y -= (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                Velocity += new Vector2(0, (float)(Speed * gameTime.ElapsedGameTime.TotalMilliseconds));
 
             if (keys.IsKeyDown(Keys.Down) || keys.IsKeyDown(Keys.S) || pad.DPad.Down == ButtonState.Pressed)
-                pos.Y += (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                //pos.Y += (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
+                Velocity += new Vector2(0, (float)(-Speed * gameTime.ElapsedGameTime.TotalMilliseconds));
 
-            Position = pos;
+            Velocity.Normalize();
+           
+            //Position = pos;
             
-            var walls = Main.Instance.Entities
-                .Where(x => x is Wall && SurroundingSectors.Contains(x.Sector))
-                .ToList();
+            //var walls = Main.Instance.Entities
+            //    .Where(x => x is Wall && SurroundingSectors.Contains(x.Sector))
+            //    .ToList();
 
-            var overlaps = walls.Where(x => CollisionHelper.Overlaps(this, x));
-            var overlapping = overlaps.Any();
+            //Position = CollisionHelper.CalculateRebounds(this, walls);
 
-            if (overlapping)
-            {
-                Position = originalPos;
-                pos = originalPos;
+            //var overlaps = walls.Where(x => CollisionHelper.Overlaps(this, x));
+            //var overlapping = overlaps.Any();
 
-                // force player away from obstruction, if we are still overlapping
-                foreach (var overlap in overlaps)
-                {
-                    var edge = CollisionHelper.CollidingEdge(this, overlap);
-                    var offset = (SpriteSheet.SpriteWidth / 2) + 1;
-                    if (edge.HasFlag(CollisionEdge.Top))
-                        pos.Y = overlap.BoundingBox.Y - offset;
-                    if (edge.HasFlag(CollisionEdge.Bottom))
-                        pos.Y = overlap.BoundingBox.Y + overlap.BoundingBox.Height + offset;
-                    if (edge.HasFlag(CollisionEdge.Left))
-                        pos.X = overlap.BoundingBox.X - offset;
-                    if (edge.HasFlag(CollisionEdge.Right))
-                        pos.X = overlap.BoundingBox.X + overlap.BoundingBox.Width + offset;
-                }
-            }
-            Position = pos;
+            //if (overlapping)
+            //{
+            //    Position = originalPos;
+            //    pos = originalPos;
+
+            //    // force player away from obstruction, if we are still overlapping
+            //    foreach (var overlap in overlaps)
+            //    {
+            //        var edge = CollisionHelper.CollidingEdge(this, overlap);
+            //        var offset = (SpriteSheet.SpriteWidth / 2) + 1;
+            //        if (edge.HasFlag(CollisionEdge.Top))
+            //            pos.Y = overlap.BoundingBox.Y - offset;
+            //        if (edge.HasFlag(CollisionEdge.Bottom))
+            //            pos.Y = overlap.BoundingBox.Y + overlap.BoundingBox.Height + offset;
+            //        if (edge.HasFlag(CollisionEdge.Left))
+            //            pos.X = overlap.BoundingBox.X - offset;
+            //        if (edge.HasFlag(CollisionEdge.Right))
+            //            pos.X = overlap.BoundingBox.X + overlap.BoundingBox.Width + offset;
+            //    }
+            //}
+            //Position = pos;
         }
 
         public void Shoot()
@@ -91,7 +100,7 @@ namespace GreatMachine.Models
 
             var bullet = new Bullet
             {
-                Velocity = velocity,
+                Velocity = velocity * Bullet.Speed,
                 Position = Position + (velocity * 37), // give enough distance so no overlap
                 Lifespan = 5,
                 Health = 1,
@@ -104,8 +113,9 @@ namespace GreatMachine.Models
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            base.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(Main.Instance.DefaultFont, $"{Health} {Position.X}, {Position.Y}", Position, Color.Black);
+            base.Draw(gameTime, spriteBatch);            
+            if (float.IsNormal(Position.X) && float.IsNormal(Position.Y))
+                spriteBatch.DrawString(Main.Instance.DefaultFont, $"{Health} {Position.X}, {Position.Y}", Position, Color.Black);
         }
 
 

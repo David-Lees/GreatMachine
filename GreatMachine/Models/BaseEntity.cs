@@ -10,15 +10,18 @@ namespace GreatMachine.Models
         /// <summary>
         /// Pixel Coordinates in World
         /// </summary>
-        private Vector2 _position;
+        private Vector2 _position = Vector2.Zero;
         public Vector2 Position
         {
             get { return _position; }
             set
             {
-                _position = value;
-                Sector = PositionHelper.GetSector(Position);
-                SurroundingSectors = PositionHelper.SurroundingSectors(Position);
+                if (!float.IsNaN(value.X) && !float.IsNaN(value.Y))
+                {
+                    _position = value;
+                    Sector = PositionHelper.GetSector(Position);
+                    SurroundingSectors = PositionHelper.SurroundingSectors(Position);
+                }
             }
         }
         
@@ -38,6 +41,10 @@ namespace GreatMachine.Models
         public bool IsDead => !Invulnerable && Health < 0;
 
         public SpriteSheet SpriteSheet { get; set; }
+
+        public float Mass { get; set; }
+
+        public float SimTimeRemaining { get; set; }
 
         public Rectangle BoundingBox
         {

@@ -101,5 +101,108 @@ namespace GreatMachine.Tests
             // Assert
             Assert.IsTrue(result);
         }
+
+        [Test]
+        public void CalculateRebounds_Works_Case1()
+        {
+            // Arrange
+            var ball = new MoveableEntity
+            {
+                Position = new Vector2(1, 1),
+                Velocity = new Vector2(3, 3),
+                SpriteSheet = new SpriteSheet(0, 0)
+            };
+
+            var wall = new Wall(0, 2) { SpriteSheet = new SpriteSheet(10, 10) };
+
+            // Act
+            var destination = CollisionHelper.CalculateRebounds(ball, new Wall[] { wall });
+
+            // Assert
+            Assert.AreEqual(new Vector2(4, 0), destination);
+        }
+
+        [Test]
+        public void CalculateRebounds_Works_Case2()
+        {
+            // Arrange
+            var ball = new MoveableEntity
+            {
+                Position = new Vector2(10, 10),
+                Velocity = new Vector2(30, 30),
+                SpriteSheet = new SpriteSheet(5, 5)
+            };
+            
+            var wall = new Wall(0, 20) { SpriteSheet = new SpriteSheet(100, 100) };
+            var wall2 = new Wall(100, 20) { SpriteSheet = new SpriteSheet(100, 100) };
+            var wall3 = new Wall(200, 20) { SpriteSheet = new SpriteSheet(100, 100) };
+
+            // Act
+            var destination = CollisionHelper.CalculateRebounds(ball, new Wall[] { wall, wall2, wall3 });
+
+            // Assert
+            Assert.AreEqual(new Vector2(40, 0), destination);
+        }
+
+        [Test]
+        public void CalculateRebounds_Works_Case3()
+        {
+            // Arrange
+            var ball = new MoveableEntity
+            {
+                Position = new Vector2(10, 10),
+                Velocity = new Vector2(30, 30),
+                SpriteSheet = new SpriteSheet(5, 5)
+            };
+
+            var wall = new Wall(0, 20) { SpriteSheet = new SpriteSheet(100, 2) };
+
+            // Act
+            var destination = CollisionHelper.CalculateRebounds(ball, new Wall[] { wall });
+
+            // Assert
+            Assert.AreEqual(new Vector2(40, 0), destination);
+        }
+
+        [Test]
+        public void CalculateRebounds_Works_Case4()
+        {
+            // Arrange
+            var ball = new MoveableEntity
+            {
+                Position = new Vector2(10, 10),
+                Velocity = new Vector2(30, 30),
+                SpriteSheet = new SpriteSheet(5, 5)
+            };
+
+            var wall = new Wall(20, 0) { SpriteSheet = new SpriteSheet(2, 100) };
+
+            // Act
+            var destination = CollisionHelper.CalculateRebounds(ball, new Wall[] { wall });
+
+            // Assert
+            Assert.AreEqual(new Vector2(0, 40), destination);
+        }
+
+        [Test]
+        public void CalculateRebounds_Works_Case5()
+        {
+            // Arrange
+            var ball = new MoveableEntity
+            {
+                Position = new Vector2(80, 10),
+                Velocity = new Vector2(80, 80),
+                SpriteSheet = new SpriteSheet(5, 5)
+            };
+
+            var wall = new Wall(100, 0) { SpriteSheet = new SpriteSheet(100, 100) };
+            var wall2 = new Wall(0, 100) { SpriteSheet = new SpriteSheet(100, 100) };            
+
+            // Act
+            var destination = CollisionHelper.CalculateRebounds(ball, new Wall[] { wall, wall2 });
+
+            // Assert
+            Assert.AreEqual(new Vector2(0, 70), destination);
+        }
     }
 }
