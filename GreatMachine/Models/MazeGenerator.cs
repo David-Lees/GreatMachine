@@ -1,4 +1,6 @@
 ﻿using GreatMachine.Helpers;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace GreatMachine.Models
         public int? South { get; set; }
         public int? East { get; set; }
         public int? West { get; set; }
-             
+
         public bool Visited { get; set; }
 
         public int X { get; private set; }
@@ -44,7 +46,7 @@ namespace GreatMachine.Models
         {
             var rand = Main.Instance.Random;
             Width = width;
-            Height = height;            
+            Height = height;
             Maze = new MazeCell[width * height];
             for (int x = 0; x < width; x++)
             {
@@ -110,14 +112,28 @@ namespace GreatMachine.Models
                     VisitedCells++;
                 }
                 else
-                {                    
+                {
                     stack.Pop(); // backtrack
                 }
                 Maze[index] = currentItem;
             }
 
+            // Add some extra links so that we have some loops and multiple path choices
+            for (int i = 0; i < 50; i++)
+            {
+                var x = Main.Instance.Random.Next(3, width - 3);
+                var y = Main.Instance.Random.Next(3, height - 3);
+                Maze[P(x, y)].South = P(x, y + 1);
+            }
+            for (int i = 0; i < 30; i++)
+            {
+                var x = Main.Instance.Random.Next(3, width - 3);
+                var y = Main.Instance.Random.Next(3, height - 3);
+                Maze[P(x, y)].East = P(x + 1, y);
+            }
+
             // Invert links
-            for(int i = 0; i < width * height; i++)
+            for (int i = 0; i < width * height; i++)
             {
                 var item = Maze[i];
                 if (item.North.HasValue) Maze[item.North.Value].South = i;
@@ -139,7 +155,7 @@ namespace GreatMachine.Models
                     var sector = Maze[P(x, y)];
 
                     StringBuilder sb = new StringBuilder();
-                    sb.Append($"{x},{y}");                    
+                    sb.Append($"{x},{y}");
                     if (sector.North != null)
                     {
                         var tn = Maze[sector.North.Value];
@@ -160,9 +176,6 @@ namespace GreatMachine.Models
                         var tw = Maze[sector.West.Value];
                         sb.Append($" W {tw.X},{tw.Y};");
                     }
-
-                    // Debug: add text
-                    walls.Add(new TextEntity(x * (cellsize + 1) + 1, y * (cellsize + 1) + 1, sb.ToString()));
 
                     for (int j = 0; j < cellsize; j++)
                     {
@@ -207,13 +220,71 @@ namespace GreatMachine.Models
             {
                 walls.Add(
                     new Wall(
-                        (c.Item1 + 1) * Main.Instance.SectorSize, 
+                        (c.Item1 + 1) * Main.Instance.SectorSize,
                         (c.Item2 + 1) * Main.Instance.SectorSize));
             }
 
             return walls;
         }
 
+        public Texture2D CreateMazeTexture()
+        {
+            var texWidth = Width * 6 + 1;
+            var texHeight = Height * 6 + 1;
 
+            Texture2D texture = new Texture2D(Main.Instance.GraphicsDevice, texWidth, texHeight);
+            Color[] data = new Color[texWidth * texHeight];
+
+            // Set background black
+            for (int pixel = 0; pixel < data.Count(); pixel++)
+            {
+                data[pixel] = Color.Black;
+            }
+
+            var wallColour = Color.DarkOrange;
+            for (int i = 0; i < texWidth; i++)
+            {
+                data[i] = wallColour;
+                data[PositionHelper.Convert2Dto1D(i, texHeight - 1, texWidth)] = wallColour;
+            }
+            for (int i = 0; i < texHeight; i++)
+            {
+                data[PositionHelper.Convert2Dto1D(0, i, texWidth)] = wallColour;
+                data[PositionHelper.Convert2Dto1D(texWidth - 1, i, texWidth)] = wallColour;
+            }
+
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    var cell = Maze[P(x, y)];
+                    if (!cell.East.HasValue)
+                    {
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6 + 1, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6 + 2, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6 + 3, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6 + 4, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6 + 5, texWidth)] = wallColour;
+                    }
+                    if (!cell.South.HasValue)
+                    {
+                        data[PositionHelper.Convert2Dto1D(x * 6, y * 6 + 6, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 1, y * 6 + 6, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 2, y * 6 + 6, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 3, y * 6 + 6, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 4, y * 6 + 6, texWidth)] = wallColour;
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 5, y * 6 + 6, texWidth)] = wallColour;
+                    }
+                    if (!cell.East.HasValue || !cell.South.HasValue)
+                    {
+                        data[PositionHelper.Convert2Dto1D(x * 6 + 6, y * 6 + 6, texWidth)] = wallColour;
+                    }
+                }
+            }
+
+            texture.SetData(data);
+            return texture;
+        }
     }
 }

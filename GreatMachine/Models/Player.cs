@@ -1,19 +1,30 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GreatMachine.Helpers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
+using tainicom.Aether.Physics2D.Controllers;
+using tainicom.Aether.Physics2D.Dynamics;
 
 namespace GreatMachine.Models
 {
     public class Player : MoveableEntity
     {
-        const double Speed = 0.001;
 
-        public Player()
+        public int PreviousSector { get; set; }
+
+        public Player(float radius)
         {
-            IsCircle = true;
-            Mass = 100f;
-            Velocity = Vector2.Zero;
+            Body = Main.Instance.World.CreateCircle(radius, 1f, new Vector2(-100, -100), BodyType.Dynamic);
+            Main.Instance.World.ControllerList.OfType<VelocityLimitController>().Single().AddBody(Body);
+            Body.LinearDamping = 1f;
+            Body.SetRestitution(1f);
+            Body.SetFriction(0.0f);
+            Body.Mass = 100f; // kg
+            Body.LinearVelocity = Vector2.Zero;
+            Body.Tag = this;
+            Body.FixedRotation = false;
         }
 
         public Vector2 Target { get; set; }
@@ -22,102 +33,80 @@ namespace GreatMachine.Models
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             var keys = Main.Instance.KeyboardInput;
             var pad = Main.Instance.GamePadInput;
             var mouse = Main.Instance.MouseInput;
 
-            if ((keys.IsKeyDown(Keys.Space) || mouse.LeftButton == ButtonState.Pressed) && Cooldown == 0)
-            {
-                Shoot();
-                Cooldown = 250; // milliseconds
-            }
-            Cooldown = (int)Math.Max(Cooldown - gameTime.ElapsedGameTime.TotalMilliseconds, 0);
-
-            // var pos = new Vector2(Position.X, Position.Y);
-            // var originalPos = new Vector2(Position.X, Position.Y);
-
-            Velocity = Vector2.Zero;
-            if (keys.IsKeyDown(Keys.Left) || keys.IsKeyDown(Keys.A) || pad.DPad.Left == ButtonState.Pressed)
-                //  pos.X -= (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
-                Velocity += new Vector2((float)(Speed * gameTime.ElapsedGameTime.TotalMilliseconds), 0);
-
-            if (keys.IsKeyDown(Keys.Right) || keys.IsKeyDown(Keys.D) || pad.DPad.Right == ButtonState.Pressed)
-                //pos.X += (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
-                Velocity += new Vector2((float)(-Speed * gameTime.ElapsedGameTime.TotalMilliseconds), 0);
-
-            if (keys.IsKeyDown(Keys.Up) || keys.IsKeyDown(Keys.W) || pad.DPad.Up == ButtonState.Pressed)
-                // pos.Y -= (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
-                Velocity += new Vector2(0, (float)(Speed * gameTime.ElapsedGameTime.TotalMilliseconds));
-
-            if (keys.IsKeyDown(Keys.Down) || keys.IsKeyDown(Keys.S) || pad.DPad.Down == ButtonState.Pressed)
-                //pos.Y += (float)(Speed * gameTime.ElapsedGameTime.TotalSeconds);
-                Velocity += new Vector2(0, (float)(-Speed * gameTime.ElapsedGameTime.TotalMilliseconds));
-
-            Velocity.Normalize();
-           
-            //Position = pos;
-            
-            //var walls = Main.Instance.Entities
-            //    .Where(x => x is Wall && SurroundingSectors.Contains(x.Sector))
-            //    .ToList();
-
-            //Position = CollisionHelper.CalculateRebounds(this, walls);
-
-            //var overlaps = walls.Where(x => CollisionHelper.Overlaps(this, x));
-            //var overlapping = overlaps.Any();
-
-            //if (overlapping)
-            //{
-            //    Position = originalPos;
-            //    pos = originalPos;
-
-            //    // force player away from obstruction, if we are still overlapping
-            //    foreach (var overlap in overlaps)
-            //    {
-            //        var edge = CollisionHelper.CollidingEdge(this, overlap);
-            //        var offset = (SpriteSheet.SpriteWidth / 2) + 1;
-            //        if (edge.HasFlag(CollisionEdge.Top))
-            //            pos.Y = overlap.BoundingBox.Y - offset;
-            //        if (edge.HasFlag(CollisionEdge.Bottom))
-            //            pos.Y = overlap.BoundingBox.Y + overlap.BoundingBox.Height + offset;
-            //        if (edge.HasFlag(CollisionEdge.Left))
-            //            pos.X = overlap.BoundingBox.X - offset;
-            //        if (edge.HasFlag(CollisionEdge.Right))
-            //            pos.X = overlap.BoundingBox.X + overlap.BoundingBox.Width + offset;
-            //    }
-            //}
-            //Position = pos;
-        }
-
-        public void Shoot()
-        {
             var target = Vector2.Transform(
                 Main.Instance.MouseInput.Position.ToVector2(),
                 Matrix.Invert(Main.Instance.Camera.Transform));
 
-            var velocity = target - Position;
+            var direction = target - Body.Position;
+            Body.Rotation = MathF.Atan2(direction.Y, direction.X) + MathHelper.PiOver2;
+
+            if ((keys.IsKeyDown(Keys.Space) || mouse.LeftButton == ButtonState.Pressed) && Cooldown == 0)
+            {
+                Shoot(target, true);
+                Cooldown = 250; // milliseconds
+            }
+            if ((keys.IsKeyDown(Keys.F) || mouse.RightButton == ButtonState.Pressed) && Cooldown == 0)
+            {
+                Shoot(target, false);
+                Cooldown = 250; // milliseconds
+            }
+
+            Cooldown = (int)Math.Max(Cooldown - gameTime.ElapsedGameTime.TotalMilliseconds, 0);
+
+            var force = 5000;
+                        
+            Body.LinearVelocity *= 0.1f;
+
+            if (keys.IsKeyDown(Keys.Left) || keys.IsKeyDown(Keys.A) || pad.DPad.Left == ButtonState.Pressed)
+            {
+                Body.ApplyLinearImpulse(new Vector2(-force, 0));
+            }
+
+            if (keys.IsKeyDown(Keys.Right) || keys.IsKeyDown(Keys.D) || pad.DPad.Right == ButtonState.Pressed)
+            {
+                Body.ApplyLinearImpulse(new Vector2(force, 0));
+            }
+
+            if (keys.IsKeyDown(Keys.Up) || keys.IsKeyDown(Keys.W) || pad.DPad.Up == ButtonState.Pressed)
+            {
+                Body.ApplyLinearImpulse(new Vector2(0, -force));
+            }
+
+            if (keys.IsKeyDown(Keys.Down) || keys.IsKeyDown(Keys.S) || pad.DPad.Down == ButtonState.Pressed)
+            {
+                Body.ApplyLinearImpulse(new Vector2(0, force));
+            }
+        }
+
+        public void Shoot(Vector2 target, bool bouncing)
+        {
+            var velocity = target - Body.Position;
             velocity.Normalize();
 
-            var bullet = new Bullet
+            var bullet = new Bullet(Body.Position + (velocity * 37), velocity)
             {
-                Velocity = velocity * Bullet.Speed,
-                Position = Position + (velocity * 37), // give enough distance so no overlap
-                Lifespan = 5,
+                Lifespan = 10,
                 Health = 1,
-                IsCircle = true,
-                SpriteSheet = Main.Instance.BulletSheet
+                SpriteSheet = Main.Instance.Assets.BulletSheet,
+                IsBouncable = bouncing
             };
 
             Main.Instance.Entities.Add(bullet);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            base.Draw(gameTime, spriteBatch);            
-            if (float.IsNormal(Position.X) && float.IsNormal(Position.Y))
-                spriteBatch.DrawString(Main.Instance.DefaultFont, $"{Health} {Position.X}, {Position.Y}", Position, Color.Black);
+        {            
+            base.Draw(gameTime, spriteBatch);
+
+            var healthPos = Body.Position + new Vector2(-SpriteSheet.Radius, SpriteSheet.Radius);
+            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos, Health > 10 ? Color.Green : Color.Red);
+            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos + Vector2.One * 2, Color.Black);            
         }
-
-
     }
 }

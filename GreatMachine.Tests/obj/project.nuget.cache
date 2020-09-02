@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "zG9pGyczTDYKaFqft9r0F1aEFel0ct7uxq8Xs9RMvkuSNB+qXd63oH28ICyIkTS6ccM8M3oua66B/u3LsRmiVQ==",
+  "dgSpecHash": "8J9YWVrziiWy0vfWStfSfdqj1q/RJxgDTd1jUYIHRofqbLQMk7B9fbNZxmeimV8OtGZilndkkF6qj6nu4CiV3g==",
   "success": true,
   "projectFilePath": "D:\\projects\\GreatMachine\\GreatMachine.Tests\\GreatMachine.Tests.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\david\\.nuget\\packages\\aether.physics2d.mg\\1.5.0\\aether.physics2d.mg.1.5.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codecoverage\\16.4.0\\microsoft.codecoverage.16.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",

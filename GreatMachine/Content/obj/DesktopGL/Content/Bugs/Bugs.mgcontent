@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>D:/projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</SourceFile>
-  <SourceTime>2020-08-29T13:17:28.5338608+01:00</SourceTime>
+  <SourceTime>2020-09-01T00:01:16.2136807+01:00</SourceTime>
   <DestFile>D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bugs/Bugs.xnb</DestFile>
-  <DestTime>2020-08-29T14:36:17.7584298+01:00</DestTime>
+  <DestTime>2020-09-01T00:03:38.0224535+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
   <ProcessorTime>2020-08-10T16:17:54+01:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
-    <Value>28,220,28,255</Value>
+    <Value>255,255,255,0</Value>
   </Parameters>
   <Parameters>
     <Key>ColorKeyEnabled</Key>

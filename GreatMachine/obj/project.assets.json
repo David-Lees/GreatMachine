@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "Aether.Physics2D.MG/1.5.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Aether.Physics2D.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Aether.Physics2D.dll": {}
+        }
+      },
       "MonoGame.Content.Builder.Task/3.8.0.1641": {
         "type": "package",
         "build": {
@@ -58,6 +67,22 @@
     }
   },
   "libraries": {
+    "Aether.Physics2D.MG/1.5.0": {
+      "sha512": "ut1Gy7migSER85mNU+m6VeuwJU7QT2i9l/2qa6ayvNxPg/l2z9o2mjG4vYkJI2AyGq25gx0qGcTvOpd0Vw9QPQ==",
+      "type": "package",
+      "path": "aether.physics2d.mg/1.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "aether.physics2d.mg.1.5.0.nupkg.sha512",
+        "aether.physics2d.mg.nuspec",
+        "lib/net40/Aether.Physics2D.dll",
+        "lib/netcore50/Aether.Physics2D.dll",
+        "lib/netstandard2.0/Aether.Physics2D.dll",
+        "lib/portable-net40+win8/Aether.Physics2D.dll",
+        "lib/portable-net45+win8+wpa81/Aether.Physics2D.dll"
+      ]
+    },
     "MonoGame.Content.Builder.Task/3.8.0.1641": {
       "sha512": "oHA60q9MhkqGnSiJlXosdynD400sQ/j1Ef+0XkJYIQT4Io9RQ6Zk8i0vjpnIbQ0PgsoaQN3IRYjNzkhqq3uUGA==",
       "type": "package",
@@ -169,6 +194,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Aether.Physics2D.MG >= 1.5.0",
       "MonoGame.Content.Builder.Task >= 3.8.0.1641",
       "MonoGame.Framework.DesktopGL >= 3.8.0.1641"
     ]
@@ -181,11 +207,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
+      "projectUniqueName": "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
       "projectName": "GreatMachine",
-      "projectPath": "D:\\Projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
+      "projectPath": "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\GreatMachine\\GreatMachine\\obj\\",
+      "outputPath": "D:\\projects\\GreatMachine\\GreatMachine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -217,6 +243,10 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "Aether.Physics2D.MG": {
+            "target": "Package",
+            "version": "[1.5.0, )"
+          },
           "MonoGame.Content.Builder.Task": {
             "target": "Package",
             "version": "[3.8.0.1641, )"

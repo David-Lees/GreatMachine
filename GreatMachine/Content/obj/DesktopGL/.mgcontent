@@ -4,14 +4,20 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Crosshairs.png</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/wall1.png</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Bugs/Spawner.png</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Bullets/ric1.wav</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Bullets/ric6.wav</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Crosshairs.png</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
+    <File>D:/projects/GreatMachine/GreatMachine/Content/Walls/wall1.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File>Bugs/Spawner.png</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

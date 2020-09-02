@@ -2,6 +2,9 @@
 {
     public class Enemy : MoveableEntity
     {
-        
+        public virtual void UpdateDirection()
+        {
+
+        }
     }
 }

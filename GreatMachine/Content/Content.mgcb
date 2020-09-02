@@ -16,7 +16,7 @@
 #begin Bugs/Bugs.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=28,220,28,255
+/processorParam:ColorKeyColor=255,255,255,0
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -24,6 +24,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Bugs/Bugs.png
+
+#begin Bugs/Spawner.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Bugs/Spawner.png;Bugs/Spawner.png
 
 #begin Bullets/bullet.png
 /importer:TextureImporter
@@ -36,6 +48,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Bullets/bullet.png
+
+#begin Bullets/ric1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bullets/ric1.wav
+
+#begin Bullets/ric6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bullets/ric6.wav
 
 #begin Crosshairs.png
 /importer:TextureImporter

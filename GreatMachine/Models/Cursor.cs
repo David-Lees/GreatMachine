@@ -5,9 +5,10 @@ namespace GreatMachine.Models
 {
     public class Cursor : BaseEntity
     {
+        public Vector2 Position { get; set; }
+
         public Cursor(SpriteSheet spriteSheet)
-        {
-            IsCircle = true;
+        {            
             SpriteSheet = spriteSheet;
         }
 
@@ -23,7 +24,7 @@ namespace GreatMachine.Models
             base.Draw(gameTime, spriteBatch);
 
             spriteBatch.DrawString(
-                Main.Instance.DefaultFont,
+                Main.Instance.Assets.DefaultFont,
                 $"{Position.X}, {Position.Y}",
                 new Vector2(0, 20),
                 Color.Black);

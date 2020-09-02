@@ -5,6 +5,8 @@ namespace GreatMachine.Models
 {
     public class TextEntity: BaseEntity
     {
+        public Vector2 Position { get; set; }
+
         public string Text { get; set; }
 
         public TextEntity(int x, int y, string text)
@@ -17,7 +19,7 @@ namespace GreatMachine.Models
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var pos = Position * Main.Instance.SectorSize;            
-            spriteBatch.DrawString(Main.Instance.DefaultFont, Text, pos, Color.Black);            
+            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, Text, pos, Color.Black);            
         }
     }    
 }

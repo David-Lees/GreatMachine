@@ -2,28 +2,15 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using tainicom.Aether.Physics2D.Dynamics;
 
 namespace GreatMachine.Models
 {
     public abstract class BaseEntity
     {
-        /// <summary>
-        /// Pixel Coordinates in World
-        /// </summary>
-        private Vector2 _position = Vector2.Zero;
-        public Vector2 Position
-        {
-            get { return _position; }
-            set
-            {
-                if (!float.IsNaN(value.X) && !float.IsNaN(value.Y))
-                {
-                    _position = value;
-                    Sector = PositionHelper.GetSector(Position);
-                    SurroundingSectors = PositionHelper.SurroundingSectors(Position);
-                }
-            }
-        }
+
+        public Body Body { get; set; }
+
         
         public ICollection<int> SurroundingSectors { get; private set; }
 
@@ -46,43 +33,53 @@ namespace GreatMachine.Models
 
         public float SimTimeRemaining { get; set; }
 
+        public List<string> Frames {  get; set; }
+
+        public int CurrentFrame { get; set; }
+
+        public double FrameCooldown { get; set; }
+
         public Rectangle BoundingBox
         {
             get
             {
-                var offset = IsCircle ?
-                    new Vector2(SpriteSheet.SpriteWidth / 2, SpriteSheet.SpriteHeight / 2) :
-                    new Vector2(0, 0);
-
-                var pos = Position - offset;
-
+                var offset = new Vector2(SpriteSheet.SpriteWidth / 2, SpriteSheet.SpriteHeight / 2);
+                var pos = Body.Position - offset;
                 return new Rectangle(
                     pos.ToPoint(),
                     new Point(SpriteSheet.SpriteWidth, SpriteSheet.SpriteHeight));
             }
         }
 
-        public bool IsCircle { get; set; }
-
         protected BaseEntity()
         {
-            IsCircle = false;
+
         }
 
         public string SpriteName { get; set; } = "Sprite000";
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
-                SpriteSheet.Texture,
-                BoundingBox,
-                SpriteSheet.SourceRectangle(SpriteName),
-                Color.White);
+            if (Body != null && SpriteSheet != null)
+            {
+                spriteBatch.Draw(
+                    SpriteSheet.Texture,
+                    BoundingBox,
+                    SpriteSheet.SourceRectangle(SpriteName),
+                    Color.White, 
+                    Body.Rotation,
+                    (BoundingBox.Center - BoundingBox.Location).ToVector2() , SpriteEffects.None, 1);
+            }
         }
 
         public virtual void Update(GameTime gameTime)
         {
+            Sector = PositionHelper.GetSector(Body.Position);
+        }
 
+        public void Destroy()
+        {
+            Main.Instance.EntitiesToRemove.Push(this);
         }
     }
 }

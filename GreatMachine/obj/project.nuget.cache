@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "cEJqEtBU1vm7gU6sgDYFUArqmViMEc6ARF1GLd/xOYAaabrQhoLBQYFNjX/lfzw014JmSkgXxGplW8cOjH1rxg==",
+  "dgSpecHash": "TECnR4Z1F0bvpXd00WDHzad55fInHBpT7zGznQN0V6WDgQMhEDcI1YXPYD/6NykdvwKYix9Sq5r9WY5DmVgBYw==",
   "success": true,
   "projectFilePath": "D:\\projects\\GreatMachine\\GreatMachine\\GreatMachine.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\david\\.nuget\\packages\\aether.physics2d.mg\\1.5.0\\aether.physics2d.mg.1.5.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
   ],

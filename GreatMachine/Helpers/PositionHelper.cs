@@ -23,13 +23,24 @@ namespace GreatMachine.Helpers
             return new Vector2(x, y);
         }
 
+        public static Vector2 GetSectorAsVector(Vector2 position)
+        {
+            if (Main.Instance != null)
+            {
+                var x = MathHelper.Clamp(position.X / Main.Instance.SectorSize, 0, Main.Instance.SectorCountX);
+                var y = MathHelper.Clamp(position.Y / Main.Instance.SectorSize, 0, Main.Instance.SectorCountY);
+                return new Vector2(x, y);
+            }
+            else return Vector2.Zero;
+        }
+
         public static int GetSector(Vector2 position)
         {
             if (Main.Instance != null)
             {
                 return Convert2Dto1D(
-                    (int)position.X / Main.Instance.SectorSize,
-                    (int)position.Y / Main.Instance.SectorSize,
+                    (int)(position.X / Main.Instance.SectorSize),
+                    (int)(position.Y / Main.Instance.SectorSize),
                     Main.Instance.SectorCountX);
             }
             else return 0;

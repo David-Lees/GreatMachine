@@ -1,7 +1,10 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bugs/Bugs.xnb","TextureProcessor","Texture2DContent",8830,393301,0.3609426
+"D:/projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bugs/Bugs.xnb","TextureProcessor","Texture2DContent",93111,213077,0.1538424
+"D:/projects/GreatMachine/GreatMachine/Content/Bugs/Spawner.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bugs/Spawner.xnb","TextureProcessor","Texture2DContent",439,16469,0.1332134
 "D:/projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bullets/bullet.xnb","TextureProcessor","Texture2DContent",271,341,0.2746447
+"D:/projects/GreatMachine/GreatMachine/Content/Bullets/ric1.wav","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bullets/ric1.xnb","SoundEffectProcessor","SoundEffectContent",36230,36217,1.7418509
+"D:/projects/GreatMachine/GreatMachine/Content/Bullets/ric6.wav","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bullets/ric6.xnb","SoundEffectProcessor","SoundEffectContent",37424,37411,0.2308413
 "D:/projects/GreatMachine/GreatMachine/Content/Crosshairs.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Crosshairs.xnb","TextureProcessor","Texture2DContent",267,4181,0.1403312
-"D:/projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/DefaultFont.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21538,0.2927514
-"D:/projects/GreatMachine/GreatMachine/Content/Player/Player.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Player/Player.xnb","TextureProcessor","Texture2DContent",439,16469,0.0274435
+"D:/projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/DefaultFont.xnb","FontDescriptionProcessor","SpriteFontContent",2015,70690,0.3326373
+"D:/projects/GreatMachine/GreatMachine/Content/Player/Player.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Player/Player.xnb","TextureProcessor","Texture2DContent",5669,16469,0.3538483
 "D:/projects/GreatMachine/GreatMachine/Content/Walls/wall1.png","D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Walls/wall1.xnb","TextureProcessor","Texture2DContent",8297,16469,0.0087453

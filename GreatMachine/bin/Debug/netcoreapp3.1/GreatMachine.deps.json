@@ -8,11 +8,20 @@
     ".NETCoreApp,Version=v3.1": {
       "GreatMachine/1.0.0": {
         "dependencies": {
+          "Aether.Physics2D.MG": "1.5.0",
           "MonoGame.Content.Builder.Task": "3.8.0.1641",
           "MonoGame.Framework.DesktopGL": "3.8.0.1641"
         },
         "runtime": {
           "GreatMachine.dll": {}
+        }
+      },
+      "Aether.Physics2D.MG/1.5.0": {
+        "runtime": {
+          "lib/netstandard2.0/Aether.Physics2D.dll": {
+            "assemblyVersion": "1.5.0.0",
+            "fileVersion": "1.5.0.0"
+          }
         }
       },
       "MonoGame.Content.Builder.Task/3.8.0.1641": {},
@@ -73,6 +82,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Aether.Physics2D.MG/1.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ut1Gy7migSER85mNU+m6VeuwJU7QT2i9l/2qa6ayvNxPg/l2z9o2mjG4vYkJI2AyGq25gx0qGcTvOpd0Vw9QPQ==",
+      "path": "aether.physics2d.mg/1.5.0",
+      "hashPath": "aether.physics2d.mg.1.5.0.nupkg.sha512"
     },
     "MonoGame.Content.Builder.Task/3.8.0.1641": {
       "type": "package",
