@@ -9,7 +9,7 @@ namespace GreatMachine.Models
         public Spawner(Vector2 position)
         {
             Health = 1;
-            Body = Main.Instance.World.CreateCircle(22, 1f, Vector2.One * 32, BodyType.Static);
+            Body = Main.Instance.World.CreateCircle(22, 1f, new Vector2(68, 76), BodyType.Static);
             Body.Position = position;
             Body.Mass = 200;
             Body.Tag = this;

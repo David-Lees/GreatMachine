@@ -4,24 +4,54 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Bugs/Spawner.png</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Bullets/ric1.wav</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Bullets/ric6.wav</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Crosshairs.png</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
-    <File>D:/projects/GreatMachine/GreatMachine/Content/Walls/wall1.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/background1.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Spawner.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/ric1.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/ric6.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Crosshairs.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Floor/oldmetal13a.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-bottom.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-bottom-left.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-bottom-right.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-left.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-right.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top-left.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top-right.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/combined-cogs1.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/combined-cogs1r.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/Combined-Cogs2.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/Combined-Cogs2r.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/wall1.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/wall2.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
-    <File>Bugs/Spawner.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File>DefaultFont.spritefont</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/projects/GreatMachine/GreatMachine/Content/Player/Player.png</SourceFile>
+  <SourceFile>D:/Projects/GreatMachine/GreatMachine/Content/Player/Player.png</SourceFile>
   <SourceTime>2020-08-31T11:32:12.6319695+01:00</SourceTime>
-  <DestFile>D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Player/Player.xnb</DestFile>
-  <DestTime>2020-09-02T17:04:03.0440984+01:00</DestTime>
+  <DestFile>D:/Projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Player/Player.xnb</DestFile>
+  <DestTime>2020-09-03T20:58:40.2387526+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

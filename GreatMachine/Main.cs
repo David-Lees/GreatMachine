@@ -1,5 +1,6 @@
 ﻿using GreatMachine.Helpers;
 using GreatMachine.Models;
+using GreatMachine.Models.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,7 +8,6 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using tainicom.Aether.Physics2D;
 using tainicom.Aether.Physics2D.Controllers;
 using tainicom.Aether.Physics2D.Dynamics;
 
@@ -69,14 +69,22 @@ namespace GreatMachine
 
         public Stack<BaseEntity> EntitiesToRemove { get; private set; } = new Stack<BaseEntity>();
 
+        public ScreenManager ScreenManager { get; set; }
+
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this)
             {
                 GraphicsProfile = GraphicsProfile.Reach,
+                PreparingDeviceSettings += _graphics_PreparingDeviceSettings,
+                PreferMultiSampling = true,
                 PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 720
             };
+
+            //new-up components and add to Game.Components
+            ScreenManager = new ScreenManager(this);
+            Components.Add(ScreenManager);
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -94,6 +102,8 @@ namespace GreatMachine
 
             ScreenWidth = _graphics.PreferredBackBufferWidth;
             ScreenHeight = _graphics.PreferredBackBufferHeight;
+
+            MenuScreen menuScreen = new MenuScreen("Samples");
 
         }
 
@@ -127,6 +137,8 @@ namespace GreatMachine
             CreateLevel();
         }
 
+        private int ZoneCountX;
+        private int ZoneCountY;
 
         private void CreateLevel()
         {
@@ -137,6 +149,8 @@ namespace GreatMachine
 
             var width = 45;
             var height = width * 9 / 16;
+            ZoneCountX = width;
+            ZoneCountY = height;
             SectorCountX = width * 6;
             SectorCountY = height * 6;
             sectors = new int[SectorCountX * SectorCountY];
@@ -327,8 +341,26 @@ namespace GreatMachine
 
             var playerPos = PositionHelper.GetSectorAsVector(Player.Body.Position);
 
+
+            // Background
+            _spriteBatch.Begin();
+
+            var ratio = ScreenWidth / (float)Assets.BackgroundTexture.Width;
+
+            _spriteBatch.Draw(
+                Assets.BackgroundTexture,
+                new Rectangle(0, 0, ScreenWidth, ScreenHeight),
+                new Rectangle(
+                    0, Assets.BackgroundTexture.Height - (int)(ratio * Assets.BackgroundTexture.Height),
+                    Assets.BackgroundTexture.Width, (int)(ratio * Assets.BackgroundTexture.Height)),
+                Color.White);
+
+            _spriteBatch.End();
+
+
             // World objects
             _spriteBatch.Begin(transformMatrix: Camera.Transform);
+
 
             foreach (var e in Entities)
             {
@@ -360,6 +392,25 @@ namespace GreatMachine
             // overlays
             _spriteBatch.Begin();
 
+            var w = 0;
+            while (w < ScreenWidth)
+            {
+                _spriteBatch.Draw(Assets.CogsTop, new Rectangle(w, 0, Assets.CogsTop.Width, Assets.CogsTop.Height), Color.White);
+                _spriteBatch.Draw(Assets.CogsBottom, new Rectangle(w, ScreenHeight - Assets.CogsBottom.Height, Assets.CogsBottom.Width, Assets.CogsBottom.Height), Color.White);
+                w += Assets.CogsTop.Width;
+            }
+            var h = 0;
+            while (h < ScreenHeight)
+            {
+                _spriteBatch.Draw(Assets.CogsLeft, new Rectangle(0, h, Assets.CogsLeft.Width, Assets.CogsLeft.Height), Color.White);
+                _spriteBatch.Draw(Assets.CogsRight, new Rectangle(ScreenWidth - Assets.CogsRight.Width, h, Assets.CogsRight.Width, Assets.CogsRight.Height), Color.White);
+                h += Assets.CogsTop.Width;
+            }
+            _spriteBatch.Draw(Assets.CogsTopLeft, new Rectangle(0, 0, Assets.CogsTopLeft.Width, Assets.CogsTopLeft.Height), Color.White);
+            _spriteBatch.Draw(Assets.CogsTopRight, new Rectangle(ScreenWidth - Assets.CogsTopRight.Width, 0, Assets.CogsTopRight.Width, Assets.CogsTopRight.Height), Color.White);
+            _spriteBatch.Draw(Assets.CogsBottomLeft, new Rectangle(0, ScreenHeight - Assets.CogsBottomLeft.Height, Assets.CogsBottomLeft.Width, Assets.CogsBottomLeft.Height), Color.White);
+            _spriteBatch.Draw(Assets.CogsBottomRight, new Rectangle(ScreenWidth - Assets.CogsBottomRight.Width, ScreenHeight - Assets.CogsBottomRight.Height, Assets.CogsBottomRight.Width, Assets.CogsBottomRight.Height), Color.White);
+
             if (Assets.MiniMap != null)
             {
                 var minimap = new Texture2D(GraphicsDevice, Assets.MiniMap.Width, Assets.MiniMap.Height);
@@ -388,7 +439,7 @@ namespace GreatMachine
 
                 _spriteBatch.Draw(
                     minimap,
-                    new Rectangle(ScreenWidth - Assets.MiniMap.Width, 0, Assets.MiniMap.Width, Assets.MiniMap.Height),
+                    new Rectangle(ScreenWidth - Assets.MiniMap.Width - 32, 32, Assets.MiniMap.Width, Assets.MiniMap.Height),
                     Color.White);
 
             }
