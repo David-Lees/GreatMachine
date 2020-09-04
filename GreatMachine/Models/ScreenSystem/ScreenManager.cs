@@ -61,7 +61,7 @@ namespace GreatMachine.Models.ScreenSystem
 
         public SpriteFonts Fonts { get; private set; }
 
-        public AssetCreator Assets { get; private set; }
+        //public AssetCreator Assets { get; private set; }
 
         /// <summary>
         /// Initializes the screen manager component.
@@ -84,8 +84,8 @@ namespace GreatMachine.Models.ScreenSystem
             BatchEffect = new BasicEffect(GraphicsDevice);
             BatchEffect.VertexColorEnabled = true;
             BatchEffect.TextureEnabled = true;
-            Assets = new AssetCreator(GraphicsDevice);
-            Assets.LoadContent(Content);
+            //Assets = new AssetCreator(GraphicsDevice);
+            //Assets.LoadContent(Content);
             _input.LoadContent();
 
             // Tell each of the screens to load their content.

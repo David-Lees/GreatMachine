@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GreatMachine.Models.ScreenSystem;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GreatMachine.Models
@@ -12,11 +13,12 @@ namespace GreatMachine.Models
             SpriteSheet = spriteSheet;
         }
 
-        public override void Update(GameTime gameTime)
-        {            
+        public override void HandleInput(InputHelper input, GameTime gameTime)
+        {
+            base.HandleInput(input, gameTime);
             Position = Vector2.Transform(
-                Main.Instance.MouseInput.Position.ToVector2(), 
-                Matrix.Invert(Main.Instance.Camera.Transform));            
+                input.MouseState.Position.ToVector2(),
+                Matrix.Invert(Main.Instance.Camera.Transform));
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

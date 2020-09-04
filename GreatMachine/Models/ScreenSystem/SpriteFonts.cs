@@ -10,14 +10,12 @@ namespace GreatMachine.Models.ScreenSystem
 {
     public class SpriteFonts
     {
-        public SpriteFont DetailsFont { get; set; }
-        public SpriteFont FrameRateCounterFont { get; set; }
+        public SpriteFont DetailsFont { get; set; }        
         public SpriteFont MenuSpriteFont { get; set; }
 
         public SpriteFonts(ContentManager contentManager)
         {
-            MenuSpriteFont = contentManager.Load<SpriteFont>("Fonts/menuFont");
-            FrameRateCounterFont = contentManager.Load<SpriteFont>("Fonts/frameRateCounterFont");
+            MenuSpriteFont = contentManager.Load<SpriteFont>("Fonts/menuFont");            
             DetailsFont = contentManager.Load<SpriteFont>("Fonts/detailsFont");
         }
     }

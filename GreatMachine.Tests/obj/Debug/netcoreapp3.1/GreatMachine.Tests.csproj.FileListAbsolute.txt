@@ -133,3 +133,10 @@ D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Wall
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Walls\Combined-Cogs2.xnb
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Walls\Combined-Cogs2r.xnb
 D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Walls\wall2.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Common\arrow.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Common\cursor.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Common\logo.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Common\slider.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Fonts\detailsFont.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Fonts\menuFont.xnb
+D:\projects\GreatMachine\GreatMachine.Tests\bin\Debug\netcoreapp3.1\Content\Common\menu.xnb

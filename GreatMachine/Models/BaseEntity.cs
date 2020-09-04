@@ -1,4 +1,5 @@
 ﻿using GreatMachine.Helpers;
+using GreatMachine.Models.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -72,9 +73,16 @@ namespace GreatMachine.Models
             }
         }
 
+        public virtual void HandleInput(InputHelper input, GameTime gameTime)
+        {
+        }
+
         public virtual void Update(GameTime gameTime)
         {
-            Sector = PositionHelper.GetSector(Body.Position);
+            if (Body != null)
+            {
+                Sector = PositionHelper.GetSector(Body.Position);
+            }
         }
 
         public void Destroy()

@@ -37,11 +37,13 @@ namespace GreatMachine.Models.ScreenSystem
         public override void LoadContent()
         {
             _logoTexture = ScreenManager.Content.Load<Texture2D>("Common/logo");
-            _backgroundTexture = ScreenManager.Content.Load<Texture2D>("Common/gradient");
+            _backgroundTexture = ScreenManager.Content.Load<Texture2D>("Common/menu");
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 logoSize = new Vector2();
-            logoSize.Y = viewport.Height * LogoScreenHeightRatio;
+            Vector2 logoSize = new Vector2
+            {
+                Y = viewport.Height * LogoScreenHeightRatio
+            };
             logoSize.X = logoSize.Y * LogoWidthHeightRatio;
 
             float border = viewport.Height * LogoScreenBorderRatio;

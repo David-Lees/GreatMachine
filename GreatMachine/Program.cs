@@ -7,7 +7,7 @@ namespace GreatMachine
         [STAThread]
         static void Main()
         {
-            using var game = new Main();
+            using var game = new GreatMachine();
             game.Run();
         }
     }

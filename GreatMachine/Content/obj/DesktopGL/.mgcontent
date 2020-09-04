@@ -10,9 +10,16 @@
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/ric1.wav</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/ric6.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/arrow.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/cursor.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/logo.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/menu.jpg</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/slider.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Crosshairs.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/efaultFont.spritefont</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Floor/oldmetal13a.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Fonts/detailsFont.spritefont</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Fonts/menuFont.spritefont</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-bottom.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-bottom-left.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-bottom-right.png</File>
@@ -37,7 +44,14 @@
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File>DefaultFont.spritefont</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

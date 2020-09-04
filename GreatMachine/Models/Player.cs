@@ -1,4 +1,4 @@
-﻿using GreatMachine.Helpers;
+﻿using GreatMachine.Models.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -29,59 +29,66 @@ namespace GreatMachine.Models
 
         public Vector2 Target { get; set; }
 
-        private int Cooldown = 0;
+        private double Cooldown = 0;
 
-        public override void Update(GameTime gameTime)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            base.Update(gameTime);
-
-            var keys = Main.Instance.KeyboardInput;
-            var pad = Main.Instance.GamePadInput;
-            var mouse = Main.Instance.MouseInput;
+            base.HandleInput(input, gameTime);
 
             var target = Vector2.Transform(
-                Main.Instance.MouseInput.Position.ToVector2(),
+                input.MouseState.Position.ToVector2(),
                 Matrix.Invert(Main.Instance.Camera.Transform));
 
             var direction = target - Body.Position;
             Body.Rotation = MathF.Atan2(direction.Y, direction.X) + MathHelper.PiOver2;
 
-            if ((keys.IsKeyDown(Keys.Space) || mouse.LeftButton == ButtonState.Pressed) && Cooldown == 0)
+            if ((input.KeyboardState.IsKeyDown(Keys.Space) || input.MouseState.LeftButton == ButtonState.Pressed) && Cooldown <= 0)
             {
                 Shoot(target, true);
                 Cooldown = 250; // milliseconds
             }
-            if ((keys.IsKeyDown(Keys.F) || mouse.RightButton == ButtonState.Pressed) && Cooldown == 0)
+            if ((input.KeyboardState.IsKeyDown(Keys.F) || input.MouseState.RightButton == ButtonState.Pressed) && Cooldown <= 0)
             {
                 Shoot(target, false);
                 Cooldown = 250; // milliseconds
             }
 
-            Cooldown = (int)Math.Max(Cooldown - gameTime.ElapsedGameTime.TotalMilliseconds, 0);
-
             var force = 5000;
-                        
-            Body.LinearVelocity *= 0.1f;
 
-            if (keys.IsKeyDown(Keys.Left) || keys.IsKeyDown(Keys.A) || pad.DPad.Left == ButtonState.Pressed)
+            if (input.KeyboardState.IsKeyDown(Keys.Left) ||
+                input.KeyboardState.IsKeyDown(Keys.A) ||
+                input.GamePadState.DPad.Left == ButtonState.Pressed)
             {
                 Body.ApplyLinearImpulse(new Vector2(-force, 0));
             }
 
-            if (keys.IsKeyDown(Keys.Right) || keys.IsKeyDown(Keys.D) || pad.DPad.Right == ButtonState.Pressed)
+            if (input.KeyboardState.IsKeyDown(Keys.Right) ||
+             input.KeyboardState.IsKeyDown(Keys.D) ||
+             input.GamePadState.DPad.Right == ButtonState.Pressed)
             {
                 Body.ApplyLinearImpulse(new Vector2(force, 0));
             }
 
-            if (keys.IsKeyDown(Keys.Up) || keys.IsKeyDown(Keys.W) || pad.DPad.Up == ButtonState.Pressed)
+            if (input.KeyboardState.IsKeyDown(Keys.Up) ||
+                input.KeyboardState.IsKeyDown(Keys.W) ||
+                input.GamePadState.DPad.Up == ButtonState.Pressed)
             {
                 Body.ApplyLinearImpulse(new Vector2(0, -force));
             }
 
-            if (keys.IsKeyDown(Keys.Down) || keys.IsKeyDown(Keys.S) || pad.DPad.Down == ButtonState.Pressed)
+            if (input.KeyboardState.IsKeyDown(Keys.Down) ||
+                input.KeyboardState.IsKeyDown(Keys.S) ||
+                input.GamePadState.DPad.Down == ButtonState.Pressed)
             {
                 Body.ApplyLinearImpulse(new Vector2(0, force));
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            Cooldown -= gameTime.ElapsedGameTime.TotalMilliseconds;
+            Body.LinearVelocity *= 0.1f;
         }
 
         public void Shoot(Vector2 target, bool bouncing)
@@ -101,12 +108,11 @@ namespace GreatMachine.Models
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {            
+        {
             base.Draw(gameTime, spriteBatch);
-
             var healthPos = Body.Position + new Vector2(-SpriteSheet.Radius, SpriteSheet.Radius);
             spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos, Health > 10 ? Color.Green : Color.Red);
-            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos + Vector2.One * 2, Color.Black);            
+            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos + Vector2.One * 2, Color.Black);
         }
     }
 }

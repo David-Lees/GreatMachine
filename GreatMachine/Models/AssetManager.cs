@@ -74,7 +74,7 @@ namespace GreatMachine.Models
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
-            };
+            }
         }
     }
 }
