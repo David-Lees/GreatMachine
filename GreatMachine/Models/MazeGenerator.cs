@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GreatMachine.Models
 {
@@ -143,75 +142,40 @@ namespace GreatMachine.Models
             }
         }
 
-        public List<BaseEntity> GetWalls(int cellsize)
+        public List<BaseEntity> GetWalls()
         {
-            var wallCoords = new HashSet<Tuple<int, int>>();
+            var cellsize = 5;
+            var wallCoords = new HashSet<Tuple<int, int, SpriteSheet>>();
             var walls = new List<BaseEntity>();
-
+                           
+            wallCoords.Add(new Tuple<int, int, SpriteSheet>(-1,-1, Corner()));
+            
+            for (int y = 0; y < Height; y++)
+            {                
+                wallCoords.Add(new Tuple<int, int, SpriteSheet>(-1, y * (cellsize + 1), Vertical()));
+            }
             for (int x = 0; x < Width; x++)
-            {
+            {                
+                wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1), -1, Corner()));                
+                wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1) + cellsize, -1, Corner()));
                 for (int y = 0; y < Height; y++)
                 {
                     var sector = Maze[P(x, y)];
-
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append($"{x},{y}");
-                    if (sector.North != null)
-                    {
-                        var tn = Maze[sector.North.Value];
-                        sb.Append($" N {tn.X},{tn.Y};");
+                    if (sector.East == null)
+                    {                        
+                        wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1) + cellsize, y * (cellsize + 1), Vertical()));
                     }
-                    if (sector.South != null)
-                    {
-                        var ts = Maze[sector.South.Value];
-                        sb.Append($" S {ts.X},{ts.Y};");
-                    }
-                    if (sector.East != null)
-                    {
-                        var te = Maze[sector.East.Value];
-                        sb.Append($" E {te.X},{te.Y};");
-                    }
-                    if (sector.West != null)
-                    {
-                        var tw = Maze[sector.West.Value];
-                        sb.Append($" W {tw.X},{tw.Y};");
-                    }
-
-                    for (int j = 0; j < cellsize; j++)
-                    {
-                        if (sector.North == null)
-                        {
-                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + j, y * (cellsize + 1) - 1));
-                        }
-
-                        if (sector.East == null)
-                        {
-                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) + j));
-                        }
-                        if (sector.South == null)
-                        {
-                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + j, y * (cellsize + 1) + cellsize));
-                        }
-                        if (sector.West == null)
-                        {
-                            wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) - 1, y * (cellsize + 1) + j));
-                        }
+                    if (sector.South == null)
+                    {                        
+                        wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize +1), y * (cellsize + 1) + cellsize, Horizontal()));
                     }
                     if (sector.South == null || sector.East == null)
-                    {
-                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) + cellsize));
-                    }
-                    if (sector.North == null || sector.East == null)
-                    {
-                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) - 1));
-                    }
-                    if (sector.North == null || sector.West == null)
-                    {
-                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) - 1, y * (cellsize + 1) - 1));
+                    {                        
+                        wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1) + cellsize, y * (cellsize + 1) + cellsize, Corner()));
                     }
                     if (sector.South == null || sector.West == null)
-                    {
-                        wallCoords.Add(new Tuple<int, int>(x * (cellsize + 1) - 1, y * (cellsize + 1) + cellsize));
+                    {                        
+                        wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1) - 1, y * (cellsize + 1) - 1, Corner()));
                     }
                 }
             }
@@ -220,12 +184,20 @@ namespace GreatMachine.Models
             {
                 walls.Add(
                     new Wall(
-                        (c.Item1 + 1) * Main.Instance.SectorSize,
-                        (c.Item2 + 1) * Main.Instance.SectorSize));
+                        (c.Item1 + 1) * Main.Instance.SectorSize + (c.Item3.SpriteWidth / 2) - 32,
+                        (c.Item2 + 1) * Main.Instance.SectorSize + (c.Item3.SpriteHeight / 2) - 32, 
+                        c.Item3.SpriteWidth, 
+                        c.Item3.SpriteHeight, 
+                        c.Item3));
             }
-
+          
             return walls;
         }
+
+        private static SpriteSheet Horizontal() => Main.Instance.Assets.HorizontalWallSheets.OrderBy(x => Guid.NewGuid()).First();       
+        private static SpriteSheet Vertical() => Main.Instance.Assets.VerticalWallSheets.OrderBy(x => Guid.NewGuid()).First();        
+        private static SpriteSheet Corner() => Main.Instance.Assets.CornerWallSheets.OrderBy(x => Guid.NewGuid()).First();
+        
 
         public Texture2D CreateMazeTexture()
         {
