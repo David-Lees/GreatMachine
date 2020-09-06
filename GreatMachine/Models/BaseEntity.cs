@@ -9,9 +9,7 @@ namespace GreatMachine.Models
 {
     public abstract class BaseEntity
     {
-
         public Body Body { get; set; }
-
         
         public ICollection<int> SurroundingSectors { get; private set; }
 
@@ -65,11 +63,14 @@ namespace GreatMachine.Models
             {
                 spriteBatch.Draw(
                     SpriteSheet.Texture,
-                    BoundingBox,
+                    Body.Position,
                     SpriteSheet.SourceRectangle(SpriteName),
                     Color.White, 
                     Body.Rotation,
-                    (BoundingBox.Center - BoundingBox.Location).ToVector2() , SpriteEffects.None, 1);
+                    new Vector2(SpriteSheet.SpriteWidth / 2.0f, SpriteSheet.SpriteHeight / 2.0f),
+                    1.0f,
+                    SpriteEffects.None, 
+                    1);
             }
         }
 

@@ -24,18 +24,19 @@ namespace GreatMachine.Models
               0);
 
             var offset = Matrix.CreateTranslation(
-                Main.Instance.ScreenWidth / 2.0f,
-                Main.Instance.ScreenHeight / 2.0f,
+                Main.Instance.GraphicsDevice.Viewport.Width / 2.0f,
+                Main.Instance.GraphicsDevice.Viewport.Height / 2.0f,
                 0);
 
-            var scale = Matrix.CreateScale(Main.Instance.Scale);
+            // var scale = Matrix.CreateScale(Main.Instance.Scale)
             var half = Matrix.CreateScale(0.5f);
+            var quater = Matrix.CreateScale(0.25f);
 
             Transform = Zoom switch
             {
                 ZoomLevel.Close => position * offset,
                 ZoomLevel.Normal => position * half * offset,
-                ZoomLevel.Far => scale,
+                ZoomLevel.Far => position * quater * offset,
                 _=> position * offset,
             };
         }

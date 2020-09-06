@@ -11,9 +11,8 @@ namespace GreatMachine.Models.ScreenSystem
 {
     public enum EntryType
     {
-        Screen,
-        Separator,
-        ExitItem
+        Action,
+        Separator,        
     }
 
     /// <summary>
@@ -41,20 +40,24 @@ namespace GreatMachine.Models.ScreenSystem
 
         private readonly EntryType _type;
         private float _width;
+        private readonly Action _action;
+        private readonly Func<bool> _IsVisible;
 
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(MenuScreen menu, string text, EntryType type, GameScreen screen)
+        public MenuEntry(MenuScreen menu, string text, EntryType type, Func<bool> isVisible, Action action)
         {
             Text = text;
-            Screen = screen;
             _type = type;
             _menu = menu;
             _scale = 0.9f;
             Alpha = 1.0f;
+            _action = action;
+            _IsVisible = isVisible;
         }
 
+        public void Act() => _action();
 
         /// <summary>
         /// Gets or sets the text of this menu entry.
@@ -73,22 +76,12 @@ namespace GreatMachine.Models.ScreenSystem
         public void Initialize()
         {
             SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
-
-            _baseOrigin = new Vector2(font.MeasureString(Text).X, font.MeasureString("M").Y) * 0.5f;
-
-            _width = font.MeasureString(Text).X * 0.8f;
-            _height = font.MeasureString("M").Y * 0.8f;
+            _width = font.MeasureString(Text).X;
+            _height = font.MeasureString("M").Y;
+            _baseOrigin = new Vector2(_width, _height) * 0.5f;
         }
 
-        public bool IsExitItem()
-        {
-            return _type == EntryType.ExitItem;
-        }
-
-        public bool IsSelectable()
-        {
-            return _type != EntryType.Separator;
-        }
+        public bool IsSelectable() => _type != EntryType.Separator;      
 
         /// <summary>
         /// Updates the menu entry.
@@ -106,7 +99,7 @@ namespace GreatMachine.Models.ScreenSystem
                 else
                     _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
 
-                _scale = 0.7f + 0.1f * _selectionFade;
+                _scale = 0.9f + 0.1f * _selectionFade;
             }
         }
 
@@ -115,37 +108,30 @@ namespace GreatMachine.Models.ScreenSystem
         /// </summary>
         public void Draw()
         {
-            SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
-            SpriteBatch batch = _menu.ScreenManager.SpriteBatch;
+            if (_IsVisible())
+            {
+                SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
+                SpriteBatch batch = _menu.ScreenManager.SpriteBatch;
 
-            // Draw the selected entry   
-            var col = new Color(235, 204, 255);
-            var colSel = new Color(203, 164, 229);
-            var colSep = new Color(164, 229, 203);
+                // Draw the selected entry   
+                var col = new Color(251, 223, 175, 255);
+                var colSel = new Color(251, 223, 175, 128);
 
 
-            Color color = _type == EntryType.Separator ? colSep : Color.Lerp(col, colSel, _selectionFade);
-            color *= Alpha;
+                Color color = _type == EntryType.Separator ? col : Color.Lerp(col, colSel, _selectionFade);
+                color *= Alpha;
 
-            // Draw text, centered on the middle of each line.
-            batch.DrawString(font, Text, Position - _baseOrigin * _scale + Vector2.One, Color.DarkSlateGray * Alpha * Alpha, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-            batch.DrawString(font, Text, Position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+                // Draw text, centered on the middle of each line.                
+                batch.DrawString(font, Text, Position - _baseOrigin * _scale + Vector2.One, Color.Black, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+                batch.DrawString(font, Text, Position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+            }
         }
 
-        /// <summary>
-        /// Queries how much space this menu entry requires.
-        /// </summary>
-        public int GetHeight()
-        {
-            return (int)_height;
-        }
+        /// <summary>Queries how much space this menu entry requires.</summary>
+        public int GetHeight() => (int)_height;
 
-        /// <summary>
-        /// Queries how wide the entry is, used for centering on the screen.
-        /// </summary>
-        public int GetWidth()
-        {
-            return (int)_width;
-        }
+        /// <summary>Queries how wide the entry is, used for centering on the screen.</summary>
+        public int GetWidth() => (int)_width;
+        
     }
 }

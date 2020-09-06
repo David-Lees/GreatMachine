@@ -13,6 +13,7 @@ namespace GreatMachine.Models
             Body.Position = position;
             Body.Mass = 200;
             Body.Tag = this;
+            Body.SetCollisionCategories(Category.Cat4);
 
             SpriteSheet = Main.Instance.Assets.SpawnerSheet;
             Frames = new List<string>();

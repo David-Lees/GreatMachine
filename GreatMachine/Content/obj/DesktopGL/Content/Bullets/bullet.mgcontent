@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>D:/projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</SourceFile>
-  <SourceTime>2020-08-30T11:27:02.9118556+01:00</SourceTime>
+  <SourceTime>2020-09-06T09:49:59.1826828+01:00</SourceTime>
   <DestFile>D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Bullets/bullet.xnb</DestFile>
-  <DestTime>2020-08-30T11:29:17.1766839+01:00</DestTime>
+  <DestTime>2020-09-06T09:50:00.1127351+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

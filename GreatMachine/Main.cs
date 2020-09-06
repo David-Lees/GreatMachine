@@ -13,15 +13,19 @@ using tainicom.Aether.Physics2D.Dynamics;
 
 namespace GreatMachine
 {
+    public enum GameState
+    {
+        New,
+        Running,
+        Won,
+        Lost,
+    }
+
     public class Main : GameScreen
     {
         private bool isDebug = false;
-        private int ZoneCountX;
-        private int ZoneCountY;        
         private readonly ContentManager Content;
-        private Cursor Cursor { get; set; }
         private readonly FrameCounter _frameCounter = new FrameCounter();
-        private readonly FrameCounter _updateCounter = new FrameCounter();
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private int[] sectors;
@@ -33,8 +37,6 @@ namespace GreatMachine
         public AssetManager Assets { get; set; }
         public Camera Camera { get; set; }
         public World World { get; set; }
-        public int ScreenWidth { get; set; }
-        public int ScreenHeight { get; set; }
         public Player Player { get; set; }
         public readonly List<BaseEntity> Entities = new List<BaseEntity>();
         public double SpawnerCooldown { get; set; }
@@ -47,6 +49,12 @@ namespace GreatMachine
         public int SectorCountY { get; set; }
         public Queue<Enemy> EnemiesRequiringPath { get; set; } = new Queue<Enemy>();
         public Pathfinder Pathfinder { get; set; }
+        public GameState State { get; set; } = GameState.New;
+
+        public GameStatusScreen GameOver { get; private set; } = new GameStatusScreen("Overlays/game-over");
+        public GameStatusScreen GameWon { get; private set; } = new GameStatusScreen("Overlays/game-won");
+        public MenuScreen Menu { get; set; }
+        public Vector2 Crosshairs { get; set; }
 
         public Main(GraphicsDeviceManager graphics, GraphicsDevice graphicsDevice, ContentManager content)
         {
@@ -55,11 +63,16 @@ namespace GreatMachine
             _graphics = graphics;
             Instance = this;
 
+            ScreenState = ScreenState.Hidden;            
+
             // Create World
             World = new World()
             {
                 Gravity = Vector2.Zero
             };
+
+            var velocityController = new VelocityLimitController(1, 2);
+            World.ControllerList.Add(velocityController);
         }
 
         public override void LoadContent()
@@ -68,33 +81,37 @@ namespace GreatMachine
             Assets = new AssetManager(Content);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var velocityController = new VelocityLimitController(1, 2);
-            World.ControllerList.Add(velocityController);
+            // Remove any existing players
+            foreach (var e in Entities.OfType<Player>().ToList())
+            {
+                Entities.Remove(e);
+            }
 
             // Create Player
-            Player = new Player(Assets.PlayerSheet.Radius)
+            Player = new Player()
             {
                 SpriteSheet = Assets.PlayerSheet,
                 Health = 100
             };
+            Entities.Add(Player);
+
             Camera = new Camera();
             Camera.Follow(Player);
-
-            // Create Cursor
-            Cursor = new Cursor(Assets.CursorSheet);
-
-            CreateLevel();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {
-            if (!otherScreenHasFocus) {
-                var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                _updateCounter.Update(deltaTime);
+        {            
+            if (IsActive && !otherScreenHasFocus && State == GameState.Running)
+            {
+                if (Player.Health < 0)
+                {
+                    State = GameState.Lost;
+                    GameOver.ScreenState = ScreenState.Active;
+                }
 
-                SpawnerCooldown -= gameTime.ElapsedGameTime.TotalSeconds;
+                SpawnerCooldown -= SpawnerCooldown > 0 ? gameTime.ElapsedGameTime.TotalSeconds : 0;
 
-                if (SpawnerCooldown < 0)
+                if (SpawnerCooldown <= 0)
                 {
                     var spawners = Entities.OfType<Spawner>().ToList();
 
@@ -103,9 +120,10 @@ namespace GreatMachine
                         SpawnerCooldown = spawners.Count / 10.0f + 0.3f;
                         SpawnCrawler(spawners);
                     }
-                    else
+                    else if (spawners.Count == 0 && !Entities.OfType<Crawler>().Any())
                     {
-                        // TODO: Game over?
+                        State = GameState.Won;
+                        GameWon.ScreenState = ScreenState.Active;
                     }
                 }
 
@@ -117,7 +135,7 @@ namespace GreatMachine
                 }
 
                 // becuase it doesn't run fast enough if called only once.
-                for (int i = 1; i < 10; i++)
+                for (int i = 0; i < 8; i++)
                     World.Step(gameTime.ElapsedGameTime);
 
                 // Update AI
@@ -143,7 +161,6 @@ namespace GreatMachine
                     e.Update(gameTime);
                 }
 
-                Cursor.Update(gameTime);
                 Player.Update(gameTime);
 
                 var origin = ViewPortOrigin;
@@ -157,14 +174,20 @@ namespace GreatMachine
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape)) ExitScreen();
+            Crosshairs = input.MouseState.Position.ToVector2();
+
+            if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
+            {
+                ScreenState = ScreenState.Hidden;
+                Menu.ScreenState = ScreenState.Active;
+            }
             if (input.IsNewKeyPress(Keys.F3)) isDebug = !isDebug;
 
             Player.HandleInput(input, gameTime);
-      
+
             if (isDebug)
             {
-                if (input.IsNewKeyPress(Keys.NumPad4)) 
+                if (input.IsNewKeyPress(Keys.NumPad4))
                     Player.Body.Position = new Vector2(Player.Body.Position.X - SectorSize * 6, Player.Body.Position.Y);
                 if (input.IsNewKeyPress(Keys.NumPad6))
                     Player.Body.Position = new Vector2(Player.Body.Position.X + SectorSize * 6, Player.Body.Position.Y);
@@ -200,40 +223,108 @@ namespace GreatMachine
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _frameCounter.Update(deltaTime);
-            var fps = $"FPS: {_frameCounter.AverageFramesPerSecond:.00}; " +
-                $"TPS: {_updateCounter.AverageFramesPerSecond:.00}; " +
-                $"Scale: {Scale:.00}";
-
-
-            GraphicsDevice.Clear(Color.SaddleBrown);
-
+            var fps = $"FPS: {_frameCounter.AverageFramesPerSecond:.00}";
             var playerPos = PositionHelper.GetSectorAsVector(Player.Body.Position);
 
-            // Background
+            DrawBackground();
+            DrawWorldObjects(gameTime);
+            DrawOverlays(fps, playerPos);
+
+            base.Draw(gameTime);
+        }
+
+        private void DrawOverlays(string fps, Vector2 playerPos)
+        {
+            // overlays
             _spriteBatch.Begin();
 
-            var ratio = ScreenWidth / (float)Assets.BackgroundTexture.Width;
+            var w = 0;
+            while (w < GraphicsDevice.Viewport.Width)
+            {
+                _spriteBatch.Draw(Assets.CogsTop, new Rectangle(w, 0, Assets.CogsTop.Width, Assets.CogsTop.Height), Color.White);
+                _spriteBatch.Draw(Assets.CogsBottom, new Rectangle(w, GraphicsDevice.Viewport.Height - Assets.CogsBottom.Height, Assets.CogsBottom.Width, Assets.CogsBottom.Height), Color.White);
+                w += Assets.CogsTop.Width;
+            }
+            var h = 0;
+            while (h < GraphicsDevice.Viewport.Height)
+            {
+                _spriteBatch.Draw(Assets.CogsLeft, new Rectangle(0, h, Assets.CogsLeft.Width, Assets.CogsLeft.Height), Color.White);
+                _spriteBatch.Draw(Assets.CogsRight, new Rectangle(GraphicsDevice.Viewport.Width - Assets.CogsRight.Width, h, Assets.CogsRight.Width, Assets.CogsRight.Height), Color.White);
+                h += Assets.CogsTop.Width;
+            }
+            _spriteBatch.Draw(Assets.CogsTopLeft, new Rectangle(0, 0, Assets.CogsTopLeft.Width, Assets.CogsTopLeft.Height), Color.White);
+            _spriteBatch.Draw(Assets.CogsTopRight, new Rectangle(GraphicsDevice.Viewport.Width - Assets.CogsTopRight.Width, 0, Assets.CogsTopRight.Width, Assets.CogsTopRight.Height), Color.White);
+            _spriteBatch.Draw(Assets.CogsBottomLeft, new Rectangle(0, GraphicsDevice.Viewport.Height - Assets.CogsBottomLeft.Height, Assets.CogsBottomLeft.Width, Assets.CogsBottomLeft.Height), Color.White);
+            _spriteBatch.Draw(Assets.CogsBottomRight, new Rectangle(GraphicsDevice.Viewport.Width - Assets.CogsBottomRight.Width, GraphicsDevice.Viewport.Height - Assets.CogsBottomRight.Height, Assets.CogsBottomRight.Width, Assets.CogsBottomRight.Height), Color.White);
 
+            if (Assets.MiniMap != null)
+            {
+                Texture2D minimap = GenerateMiniMap(playerPos);
+                _spriteBatch.Draw(
+                    minimap,
+                    new Rectangle(GraphicsDevice.Viewport.Width - Assets.MiniMap.Width - 32, 32, Assets.MiniMap.Width, Assets.MiniMap.Height),
+                    Color.White);
+            }
+            if (isDebug)
+            {
+                _spriteBatch.DrawString(Assets.DefaultFont, fps, new Vector2(1, 1), Color.Black);
+            }
+
+            _spriteBatch.Draw(Assets.CursorSheet.Texture, Crosshairs - (Vector2.One * 16), Color.White);
 
             _spriteBatch.Draw(
-                Assets.BackgroundTexture,
-                new Rectangle(0, 0, ScreenWidth, ScreenHeight),
-                new Rectangle(
-                    0, Assets.BackgroundTexture.Height - (int)(ratio * Assets.BackgroundTexture.Height),
-                    Assets.BackgroundTexture.Width, (int)(ratio * Assets.BackgroundTexture.Height)),
-                Color.White);
+                Assets.HealthBar,
+                new Rectangle(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 256, 256),
+                null,
+                Color.Lerp(Color.Red, Color.Green, Player.Health / 100f),
+                MathHelper.Lerp(-MathHelper.PiOver2, 0, Player.Health / 100f),
+                Vector2.One * 256,
+                SpriteEffects.None,
+                0);
+
 
             _spriteBatch.End();
+        }
 
+        private Texture2D GenerateMiniMap(Vector2 playerPos)
+        {
+            var minimap = new Texture2D(GraphicsDevice, Assets.MiniMap.Width, Assets.MiniMap.Height);
+            var data = new Color[Assets.MiniMap.Width * Assets.MiniMap.Height];
+            Assets.MiniMap.GetData(data);
+
+
+            foreach (var e in Entities.OfType<Enemy>())
+            {
+                var epos = PositionHelper.GetSectorAsVector(e.Body.Position);
+                if (epos.X > 0 && epos.Y > 0 && epos.X < Assets.MiniMap.Width - 2 && epos.Y < Assets.MiniMap.Height - 2)
+                {
+                    data[PositionHelper.Convert2Dto1D((int)epos.X, (int)epos.Y, Assets.MiniMap.Width)] = Color.IndianRed;
+                }
+            }
+
+            if (playerPos.X > 0 && playerPos.Y > 0 && playerPos.X < Assets.MiniMap.Width - 2 && playerPos.Y < Assets.MiniMap.Height - 2)
+            {
+                data[P((int)playerPos.X, (int)playerPos.Y)] = Color.White;
+                data[P((int)playerPos.X - 1, (int)playerPos.Y)] = Color.White;
+                data[P((int)playerPos.X, (int)playerPos.Y - 1)] = Color.White;
+                data[P((int)playerPos.X + 1, (int)playerPos.Y)] = Color.White;
+                data[P((int)playerPos.X, (int)playerPos.Y + 1)] = Color.White;
+            }
+            minimap.SetData(data);
+            return minimap;
+        }
+
+        private int P(int x, int y) => PositionHelper.Convert2Dto1D(MathHelper.Clamp(x, 0, Assets.MiniMap.Width), MathHelper.Clamp(y, 0, Assets.MiniMap.Height), Assets.MiniMap.Width);
+
+        private void DrawWorldObjects(GameTime gameTime)
+        {
             // World objects
             _spriteBatch.Begin(transformMatrix: Camera.Transform);
-
 
             foreach (var e in Entities)
             {
                 e.Draw(gameTime, _spriteBatch);
             }
-
 
             if (isDebug)
             {
@@ -251,82 +342,41 @@ namespace GreatMachine
                 }
             }
 
-            Cursor.Draw(gameTime, _spriteBatch);
+            //Cursor.Draw(gameTime, _spriteBatch);
 
             _spriteBatch.End();
+        }
 
-
-            // overlays
+        private void DrawBackground()
+        {
+            // Background
             _spriteBatch.Begin();
 
-            var w = 0;
-            while (w < ScreenWidth)
-            {
-                _spriteBatch.Draw(Assets.CogsTop, new Rectangle(w, 0, Assets.CogsTop.Width, Assets.CogsTop.Height), Color.White);
-                _spriteBatch.Draw(Assets.CogsBottom, new Rectangle(w, ScreenHeight - Assets.CogsBottom.Height, Assets.CogsBottom.Width, Assets.CogsBottom.Height), Color.White);
-                w += Assets.CogsTop.Width;
-            }
-            var h = 0;
-            while (h < ScreenHeight)
-            {
-                _spriteBatch.Draw(Assets.CogsLeft, new Rectangle(0, h, Assets.CogsLeft.Width, Assets.CogsLeft.Height), Color.White);
-                _spriteBatch.Draw(Assets.CogsRight, new Rectangle(ScreenWidth - Assets.CogsRight.Width, h, Assets.CogsRight.Width, Assets.CogsRight.Height), Color.White);
-                h += Assets.CogsTop.Width;
-            }
-            _spriteBatch.Draw(Assets.CogsTopLeft, new Rectangle(0, 0, Assets.CogsTopLeft.Width, Assets.CogsTopLeft.Height), Color.White);
-            _spriteBatch.Draw(Assets.CogsTopRight, new Rectangle(ScreenWidth - Assets.CogsTopRight.Width, 0, Assets.CogsTopRight.Width, Assets.CogsTopRight.Height), Color.White);
-            _spriteBatch.Draw(Assets.CogsBottomLeft, new Rectangle(0, ScreenHeight - Assets.CogsBottomLeft.Height, Assets.CogsBottomLeft.Width, Assets.CogsBottomLeft.Height), Color.White);
-            _spriteBatch.Draw(Assets.CogsBottomRight, new Rectangle(ScreenWidth - Assets.CogsBottomRight.Width, ScreenHeight - Assets.CogsBottomRight.Height, Assets.CogsBottomRight.Width, Assets.CogsBottomRight.Height), Color.White);
+            float scaleHeight = GraphicsDevice.Viewport.Height / (float)Assets.BackgroundTexture.Height;
+            float scaleWidth = GraphicsDevice.Viewport.Width / (float)Assets.BackgroundTexture.Width;
+            float scale = MathF.Max(scaleWidth, scaleHeight);
 
-            if (Assets.MiniMap != null)
-            {
-                var minimap = new Texture2D(GraphicsDevice, Assets.MiniMap.Width, Assets.MiniMap.Height);
-                var data = new Color[Assets.MiniMap.Width * Assets.MiniMap.Height];
-                Assets.MiniMap.GetData(data);
+            _spriteBatch.Draw(
+                Assets.BackgroundTexture,
+                new Rectangle(
+                    0, 0,
+                    (int)(Assets.BackgroundTexture.Width * scale), (int)(Assets.BackgroundTexture.Height * scale)),
+                Color.White);
 
-
-                foreach (var e in Entities.OfType<Enemy>())
-                {
-                    var epos = PositionHelper.GetSectorAsVector(e.Body.Position);
-                    if (epos.X > 0 && epos.Y > 0 && epos.X < Assets.MiniMap.Width - 2 && epos.Y < Assets.MiniMap.Height - 2)
-                    {
-                        data[PositionHelper.Convert2Dto1D((int)epos.X, (int)epos.Y, Assets.MiniMap.Width)] = Color.IndianRed;
-                    }
-                }
-
-                if (playerPos.X > 0 && playerPos.Y > 0 && playerPos.X < Assets.MiniMap.Width - 2 && playerPos.Y < Assets.MiniMap.Height - 2)
-                {
-                    data[PositionHelper.Convert2Dto1D((int)playerPos.X, (int)playerPos.Y, Assets.MiniMap.Width)] = Color.White;
-                    data[PositionHelper.Convert2Dto1D((int)playerPos.X - 1, (int)playerPos.Y, Assets.MiniMap.Width)] = Color.White;
-                    data[PositionHelper.Convert2Dto1D((int)playerPos.X, (int)playerPos.Y - 1, Assets.MiniMap.Width)] = Color.White;
-                    data[PositionHelper.Convert2Dto1D((int)playerPos.X + 1, (int)playerPos.Y, Assets.MiniMap.Width)] = Color.White;
-                    data[PositionHelper.Convert2Dto1D((int)playerPos.X, (int)playerPos.Y + 1, Assets.MiniMap.Width)] = Color.White;
-                }
-                minimap.SetData(data);
-
-                _spriteBatch.Draw(
-                    minimap,
-                    new Rectangle(ScreenWidth - Assets.MiniMap.Width - 32, 32, Assets.MiniMap.Width, Assets.MiniMap.Height),
-                    Color.White);
-
-            }
-            _spriteBatch.DrawString(Assets.DefaultFont, fps, new Vector2(1, 1), Color.Red);
             _spriteBatch.End();
+        }
 
-            base.Draw(gameTime);
-        }              
-                  
-        private void CreateLevel()
+        public void CreateLevel()
         {
+            State = GameState.New;
+
             foreach (var e in Entities.ToList())
             {
-                e.Destroy();
+                if (e.GetType() != typeof(Player)) e.Destroy();
             }
 
             var width = 45;
             var height = width * 9 / 16;
-            ZoneCountX = width;
-            ZoneCountY = height;
             SectorCountX = width * 6;
             SectorCountY = height * 6;
             sectors = new int[SectorCountX * SectorCountY];
@@ -337,22 +387,29 @@ namespace GreatMachine
                 SectorCountX * SectorSize / 2 + (SectorSize / 2),
                 SectorCountY * SectorSize / 2 + (SectorSize / 2));
 
+            Player.Health = 100;
+
             var maze = new MazeGenerator(width, height);
-            var walls = maze.GetWalls(5);
+            var walls = maze.GetWalls();
             foreach (var wall in walls.OfType<Wall>().ToList())
             {
-                wall.SpriteSheet = Assets.WallSheet;
-                var sector = PositionHelper.GetSectorAsVector(wall.BoundingBox.Center.ToVector2());
-                Pathfinder.SetObstacle((int)Math.Floor(sector.X) - 1, (int)Math.Floor(sector.Y) - 1, true);
+                for (int i = 0; i < wall.BoundingBox.Width / 64; i++)
+                {
+                    for (int j = 0; j < wall.BoundingBox.Height / 64; j++)
+                    {
+                        var sector = PositionHelper.GetSectorAsVector(
+                            new Vector2(wall.BoundingBox.X + i * 64 + 32, wall.BoundingBox.Y + j * 64 + 32));
+                        Pathfinder.SetObstacle((int)Math.Floor(sector.X), (int)Math.Floor(sector.Y), true);
+                    }
+                }
             }
             Entities.AddRange(walls);
-            Entities.Add(Player);
 
             for (int i = 0; i < 50; i++)
             {
                 var spawner = new Spawner(new Vector2(
-                    Random.Next(width) * SectorSize * 6 + (SectorSize / 2) + (SectorSize * 2),
-                    Random.Next(height) * SectorSize * 6 + (SectorSize / 2) + (SectorSize * 2)
+                    Random.Next(width) * SectorSize * 6 + (SectorSize / 2) + (SectorSize * 2) + 64,
+                    Random.Next(height) * SectorSize * 6 + (SectorSize / 2) + (SectorSize * 2) + 64
                     ));
                 Entities.Add(spawner);
 
@@ -363,6 +420,8 @@ namespace GreatMachine
             }
 
             Assets.MiniMap = maze.CreateMazeTexture();
+
+            State = GameState.Running;
         }
 
         private void SpawnCrawler(List<Spawner> spawners)
@@ -376,6 +435,6 @@ namespace GreatMachine
             Entities.Add(new Crawler(new Vector2(
                 spawner.Body.Position.X + Random.Next(256) - 128,
                 spawner.Body.Position.Y + Random.Next(256) - 128)));
-        }          
+        }
     }
 }

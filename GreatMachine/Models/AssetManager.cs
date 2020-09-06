@@ -12,7 +12,9 @@ namespace GreatMachine.Models
         public SpriteFont DefaultFont { get; set; }
         public SpriteSheet BugsSheet { get; set; }
         public SpriteSheet PlayerSheet { get; set; }
-        public SpriteSheet WallSheet { get; set; }
+        public List<SpriteSheet> HorizontalWallSheets { get; set; }
+        public List<SpriteSheet> VerticalWallSheets { get; set; }
+        public List<SpriteSheet> CornerWallSheets { get; set; }
         public SpriteSheet CursorSheet { get; set; }
         public SpriteSheet SpawnerSheet { get; set; }
 
@@ -34,6 +36,7 @@ namespace GreatMachine.Models
         public Texture2D CogsBottom { get; private set; }
         public Texture2D Floor { get; private set; }
 
+        public Texture2D HealthBar { get; private set; }
 
         public AssetManager(ContentManager content)
         {
@@ -41,11 +44,10 @@ namespace GreatMachine.Models
 
             var BugsTexture = content.Load<Texture2D>("Bugs/Bugs");
             var PlayerTexture = content.Load<Texture2D>("Player/Player");
-            var WallTexture = content.Load<Texture2D>("Walls/wall1");
             var BulletTexture = content.Load<Texture2D>("Bullets/bullet");
             var CursorTexture = content.Load<Texture2D>("Crosshairs");
             var SpawnerTexture = content.Load<Texture2D>("Bugs/Spawner");
-                        
+
             BackgroundTexture = content.Load<Texture2D>("background1");
             CogsTopRight = content.Load<Texture2D>("Overlays/cogs-top-right");
             CogsTopLeft = content.Load<Texture2D>("Overlays/cogs-top-left");
@@ -55,16 +57,31 @@ namespace GreatMachine.Models
             CogsRight = content.Load<Texture2D>("Overlays/cogs-right");
             CogsTop = content.Load<Texture2D>("Overlays/cogs-top");
             CogsBottom = content.Load<Texture2D>("Overlays/cogs-bottom");
-
+            HealthBar = content.Load<Texture2D>("Overlays/HealthBar");
             Floor = content.Load<Texture2D>("Floor/oldmetal13a");
 
             BugsSheet = new SpriteSheet(BugsTexture).GenerateIndexes(64, 64, 13, 1);
-            PlayerSheet = new SpriteSheet(PlayerTexture).GenerateIndexes(64, 64, 1, 1);
-            WallSheet = new SpriteSheet(WallTexture).GenerateIndexes(64, 64, 1, 1);
-            BulletSheet = new SpriteSheet(BulletTexture).GenerateIndexes(8, 8, 1, 1);
+            PlayerSheet = new SpriteSheet(PlayerTexture).GenerateIndexes(128, 128, 1, 1);
+            BulletSheet = new SpriteSheet(BulletTexture).GenerateIndexes(8, 8, 2, 1);
             CursorSheet = new SpriteSheet(CursorTexture).GenerateIndexes(32, 32, 1, 1);
-            SpawnerSheet = new SpriteSheet(SpawnerTexture).GenerateIndexes(128, 128, 1, 1);
-            
+            SpawnerSheet = new SpriteSheet(SpawnerTexture).GenerateIndexes(128, 128, 1, 1);       
+
+            HorizontalWallSheets = new List<SpriteSheet>
+            {
+                new SpriteSheet(content.Load<Texture2D>("Walls/combined-cogs1")).GenerateIndexes(320, 64, 1, 21),
+                new SpriteSheet(content.Load<Texture2D>("Walls/Combined-Cogs2")).GenerateIndexes(320, 64, 1, 21)
+            };
+
+            VerticalWallSheets = new List<SpriteSheet>
+            {
+                new SpriteSheet(content.Load<Texture2D>("Walls/combined-cogs1r")).GenerateIndexes(64, 320, 21, 1),
+                new SpriteSheet(content.Load<Texture2D>("Walls/Combined-Cogs2r")).GenerateIndexes(64, 320, 21, 1)
+            };
+
+            CornerWallSheets = new List<SpriteSheet>
+            {
+                new SpriteSheet(content.Load<Texture2D>("Walls/wall2")).GenerateIndexes(64, 64, 1, 1)
+            };
 
             SoundEffects = new Dictionary<string, SoundEffect>();
             try

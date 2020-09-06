@@ -1,5 +1,4 @@
-﻿using System;
-using GreatMachine.Models.ScreenSystem;
+﻿using GreatMachine.Models.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,6 +9,8 @@ namespace GreatMachine
         private readonly GraphicsDeviceManager _graphics;
         public ScreenManager ScreenManager { get; set; }
 
+        public Main Main { get; set; }        
+
         public GreatMachine()
         {
             _graphics = new GraphicsDeviceManager(this)
@@ -19,17 +20,17 @@ namespace GreatMachine
                 PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 720
             };
-            _graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
+            _graphics.PreparingDeviceSettings += GraphicsPreparingDeviceSettings;
 
             //new-up components and add to Game.Components
             ScreenManager = new ScreenManager(this);
             Components.Add(ScreenManager);
 
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
-        void _graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+        void GraphicsPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
         {
             // unlock the 30 fps limit. 60fps (if possible)
             e.GraphicsDeviceInformation.PresentationParameters.PresentationInterval = PresentInterval.One;
@@ -43,22 +44,38 @@ namespace GreatMachine
         {
             base.Initialize();
 
-            _graphics.PreferredBackBufferWidth = 1680;
-            _graphics.PreferredBackBufferHeight = 1050;
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
             _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
 
-            Main playScreen = new Main(_graphics, GraphicsDevice, Content);
+            Main = new Main(_graphics, GraphicsDevice, Content);
 
-            MenuScreen menuScreen = new MenuScreen("Samples");
-            menuScreen.AddMenuItem("New Game", EntryType.Screen, playScreen);
+            MenuScreen menuScreen = new MenuScreen();
 
-            menuScreen.AddMenuItem("", EntryType.Separator, null);
-            menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);
+            menuScreen.AddMenuItem("Resume", EntryType.Action, () => Main.State == GameState.Running, () => { 
+                Main.ScreenState = ScreenState.Active;
+                menuScreen.ScreenState = ScreenState.Hidden;
+            });
+            menuScreen.AddMenuItem("New Game", EntryType.Action, () => true, () => {
+                Main.CreateLevel();
+                Main.ScreenState = ScreenState.Active;
+                menuScreen.ScreenState = ScreenState.Hidden;
+                Main.GameOver.ScreenState = ScreenState.Hidden;
+                Main.GameWon.ScreenState = ScreenState.Hidden;
+            });            
+            menuScreen.AddMenuItem("Exit", EntryType.Action, () => true, () => Exit());
+            menuScreen.AddMenuItem("", EntryType.Separator, () => true, () => { });
 
-            ScreenManager.AddScreen(new BackgroundScreen());
+            ScreenManager.AddScreen(new BackgroundScreen() { ScreenState = ScreenState.Active });
+            ScreenManager.AddScreen(Main);
             ScreenManager.AddScreen(menuScreen);
-            ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(3.0)));
+            ScreenManager.AddScreen(Main.GameOver);
+            ScreenManager.AddScreen(Main.GameWon);
+
+            Main.Menu = menuScreen;
+
+            menuScreen.ScreenState = ScreenState.Active;
         }
     }
 }

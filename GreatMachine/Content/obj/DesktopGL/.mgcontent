@@ -5,6 +5,7 @@
   <Config />
   <SourceFiles>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/background1.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/background2.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Spawner.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
@@ -28,6 +29,11 @@
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top-left.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top-right.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/game-over.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/game-won.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/Girl.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/HealthBar.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/logo.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/combined-cogs1.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/combined-cogs1r.png</File>
@@ -49,7 +55,13 @@
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File>DefaultFont.spritefont</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

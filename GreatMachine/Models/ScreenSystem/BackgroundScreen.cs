@@ -3,7 +3,6 @@
  * Microsoft Permissive License (Ms-PL) v1.1
  */
 
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -23,22 +22,25 @@ namespace GreatMachine.Models.ScreenSystem
         private Texture2D _backgroundTexture;
         private Rectangle _logoDestination;
         private Texture2D _logoTexture;
+        private Texture2D _titleTexture;
+        private Rectangle _titleDestination;
         private Rectangle _viewport;
+        private Texture2D _girl;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public BackgroundScreen()
         {
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
         public override void LoadContent()
         {
             _logoTexture = ScreenManager.Content.Load<Texture2D>("Common/logo");
-            _backgroundTexture = ScreenManager.Content.Load<Texture2D>("Common/menu");
-
+            _backgroundTexture = ScreenManager.Content.Load<Texture2D>("background2");
+            _titleTexture = ScreenManager.Content.Load<Texture2D>("Overlays/logo");
+            _girl = ScreenManager.Content.Load<Texture2D>("Overlays/girl");
+            
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 logoSize = new Vector2
             {
@@ -46,10 +48,17 @@ namespace GreatMachine.Models.ScreenSystem
             };
             logoSize.X = logoSize.Y * LogoWidthHeightRatio;
 
+            var ratio = (viewport.Width / 2.0f) / _titleTexture.Width;
+            _titleDestination = new Rectangle(
+                (int)((viewport.Width - (_titleTexture.Width * ratio)) / 2.0f), 
+                (int)(viewport.Height / 10.0f), 
+                (int)(_titleTexture.Width * ratio), (int)(_titleTexture.Height * ratio));
+
+
             float border = viewport.Height * LogoScreenBorderRatio;
-            Vector2 logoPosition = new Vector2(viewport.Width - border - logoSize.X, viewport.Height - border - logoSize.Y);
+            Vector2 logoPosition = new Vector2(border, viewport.Height - border - logoSize.Y);
             _logoDestination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
-            _viewport = viewport.Bounds;
+            _viewport = viewport.Bounds;            
         }
 
         /// <summary>
@@ -71,7 +80,9 @@ namespace GreatMachine.Models.ScreenSystem
         {
             ScreenManager.SpriteBatch.Begin();
             ScreenManager.SpriteBatch.Draw(_backgroundTexture, _viewport, Color.White);
-            ScreenManager.SpriteBatch.Draw(_logoTexture, _logoDestination, Color.White * 0.6f);
+            ScreenManager.SpriteBatch.Draw(_logoTexture, _logoDestination, Color.White * 0.25f);
+            ScreenManager.SpriteBatch.Draw(_titleTexture, _titleDestination, Color.White);
+            ScreenManager.SpriteBatch.Draw(_girl, new Vector2(_viewport.Width - _girl.Width, _viewport.Height - _girl.Height), Color.White);
             ScreenManager.SpriteBatch.End();
         }
     }

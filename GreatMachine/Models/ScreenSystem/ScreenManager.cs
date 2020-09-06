@@ -26,7 +26,6 @@ namespace GreatMachine.Models.ScreenSystem
 
         private readonly List<GameScreen> _screens;
         private readonly List<GameScreen> _screensToUpdate;
-
         private readonly List<RenderTarget2D> _transitions;
 
         /// <summary>
@@ -61,8 +60,6 @@ namespace GreatMachine.Models.ScreenSystem
 
         public SpriteFonts Fonts { get; private set; }
 
-        //public AssetCreator Assets { get; private set; }
-
         /// <summary>
         /// Initializes the screen manager component.
         /// </summary>
@@ -81,11 +78,11 @@ namespace GreatMachine.Models.ScreenSystem
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             LineBatch = new LineBatch(GraphicsDevice);
-            BatchEffect = new BasicEffect(GraphicsDevice);
-            BatchEffect.VertexColorEnabled = true;
-            BatchEffect.TextureEnabled = true;
-            //Assets = new AssetCreator(GraphicsDevice);
-            //Assets.LoadContent(Content);
+            BatchEffect = new BasicEffect(GraphicsDevice)
+            {
+                VertexColorEnabled = true,
+                TextureEnabled = true
+            };
             _input.LoadContent();
 
             // Tell each of the screens to load their content.
@@ -132,13 +129,12 @@ namespace GreatMachine.Models.ScreenSystem
             {
                 // Pop the topmost screen off the waiting list.
                 GameScreen screen = _screensToUpdate[_screensToUpdate.Count - 1];
-
                 _screensToUpdate.RemoveAt(_screensToUpdate.Count - 1);
 
                 // Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-                if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.Active)
+                if (screen.ScreenState == ScreenState.Active)
                 {
                     // If this is the first active screen we came across,
                     // give it a chance to handle input.
@@ -165,53 +161,13 @@ namespace GreatMachine.Models.ScreenSystem
         {
             foreach (GameScreen screen in _screens)
             {
-                if (screen.ScreenState == ScreenState.TransitionOn ||
-                    screen.ScreenState == ScreenState.TransitionOff ||
-                    screen.ScreenState == ScreenState.Active)
+                if (screen.ScreenState != ScreenState.Hidden)
                 {
                     screen.PreDraw(gameTime);
                     GraphicsDevice.SetRenderTarget(null);
-                }
-            }
-
-            int transitionCount = 0;
-            foreach (GameScreen screen in _screens)
-            {
-                if (screen.ScreenState == ScreenState.TransitionOn ||
-                    screen.ScreenState == ScreenState.TransitionOff)
-                {
-                    ++transitionCount;
-                    if (_transitions.Count < transitionCount)
-                    {
-                        PresentationParameters _pp = GraphicsDevice.PresentationParameters;
-                        _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false, SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount, RenderTargetUsage.DiscardContents));
-                    }
-                    GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
-                    GraphicsDevice.Clear(Color.Transparent);
                     screen.Draw(gameTime);
-                    GraphicsDevice.SetRenderTarget(null);
                 }
-            }
-
-            GraphicsDevice.Clear(Color.Black);
-
-            transitionCount = 0;
-            foreach (GameScreen screen in _screens)
-            {
-                if (screen.ScreenState == ScreenState.Hidden)
-                    continue;
-
-                if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.TransitionOff)
-                {
-                    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                    SpriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
-                    SpriteBatch.End();
-
-                    ++transitionCount;
-                }
-                else
-                    screen.Draw(gameTime);
-            }
+            }            
             _input.Draw();
         }
 
@@ -221,7 +177,6 @@ namespace GreatMachine.Models.ScreenSystem
         public void AddScreen(GameScreen screen)
         {
             screen.ScreenManager = this;
-            screen.IsExiting = false;
 
             // If we have a graphics device, tell the screen to load content.
             if (_isInitialized)
@@ -251,7 +206,7 @@ namespace GreatMachine.Models.ScreenSystem
             // if there is a screen still in the manager, update TouchPanel
             // to respond to gestures that screen is interested in.
             if (_screens.Count > 0)
-                TouchPanel.EnabledGestures = _screens[_screens.Count - 1].EnabledGestures;
+                TouchPanel.EnabledGestures = _screens[^1].EnabledGestures;
         }
     }
 }

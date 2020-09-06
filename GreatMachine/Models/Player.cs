@@ -1,6 +1,5 @@
 ﻿using GreatMachine.Models.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
@@ -11,16 +10,17 @@ namespace GreatMachine.Models
 {
     public class Player : MoveableEntity
     {
-
         public int PreviousSector { get; set; }
 
-        public Player(float radius)
+        public Player()
         {
-            Body = Main.Instance.World.CreateCircle(radius, 1f, new Vector2(-100, -100), BodyType.Dynamic);
+            Body = Main.Instance.World.CreateCircle(48, 1f, Vector2.One * 64, BodyType.Dynamic);
             Main.Instance.World.ControllerList.OfType<VelocityLimitController>().Single().AddBody(Body);
             Body.LinearDamping = 1f;
             Body.SetRestitution(1f);
             Body.SetFriction(0.0f);
+            Body.SetCollisionCategories(Category.Cat1);
+            Body.SetCollidesWith(Category.Cat2 | Category.Cat3 | Category.Cat5 | Category.Cat6 | Category.Cat7);
             Body.Mass = 100f; // kg
             Body.LinearVelocity = Vector2.Zero;
             Body.Tag = this;
@@ -40,7 +40,7 @@ namespace GreatMachine.Models
                 Matrix.Invert(Main.Instance.Camera.Transform));
 
             var direction = target - Body.Position;
-            Body.Rotation = MathF.Atan2(direction.Y, direction.X) + MathHelper.PiOver2;
+            Body.Rotation = MathF.Atan2(direction.Y, direction.X) + MathHelper.PiOver2 + 0.05f;
 
             if ((input.KeyboardState.IsKeyDown(Keys.Space) || input.MouseState.LeftButton == ButtonState.Pressed) && Cooldown <= 0)
             {
@@ -96,23 +96,16 @@ namespace GreatMachine.Models
             var velocity = target - Body.Position;
             velocity.Normalize();
 
-            var bullet = new Bullet(Body.Position + (velocity * 37), velocity)
+            var bullet = new Bullet(Body.Position + (velocity * 63), velocity)
             {
                 Lifespan = 10,
                 Health = 1,
                 SpriteSheet = Main.Instance.Assets.BulletSheet,
+                SpriteName = "Sprite001",
                 IsBouncable = bouncing
             };
 
             Main.Instance.Entities.Add(bullet);
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            base.Draw(gameTime, spriteBatch);
-            var healthPos = Body.Position + new Vector2(-SpriteSheet.Radius, SpriteSheet.Radius);
-            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos, Health > 10 ? Color.Green : Color.Red);
-            spriteBatch.DrawString(Main.Instance.Assets.DefaultFont, $"{Health}", healthPos + Vector2.One * 2, Color.Black);
         }
     }
 }

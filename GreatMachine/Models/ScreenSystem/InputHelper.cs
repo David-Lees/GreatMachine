@@ -28,11 +28,9 @@ namespace GreatMachine.Models.ScreenSystem
     public class InputHelper
     {
         private readonly List<GestureSample> _gestures = new List<GestureSample>();
-        private bool _cursorIsVisible;
         private Sprite _cursorSprite;
 
         private readonly ScreenManager _manager;
-        private Viewport _viewport;
 
         /// <summary>
         ///   Constructs a new input state.
@@ -51,10 +49,8 @@ namespace GreatMachine.Models.ScreenSystem
 
             _manager = manager;
 
-            _cursorIsVisible = false;
-            IsCursorMoved = false;
+            ShowCursor = false;
 
-            IsCursorValid = true;
             Cursor = Vector2.Zero;
             EnableVirtualStick = false;
         }
@@ -75,24 +71,15 @@ namespace GreatMachine.Models.ScreenSystem
 
         public GamePadState PreviousVirtualState { get; private set; }
 
-        public bool ShowCursor
-        {
-            get { return _cursorIsVisible && IsCursorValid; }
-            set { _cursorIsVisible = value; }
-        }
+        public bool ShowCursor { get; set; }
 
         public bool EnableVirtualStick { get; set; }
 
         public Vector2 Cursor { get; private set; }
 
-        public bool IsCursorMoved { get; private set; }
-
-        public bool IsCursorValid { get; private set; }
-
         public void LoadContent()
         {
-            _cursorSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/cursor"), Vector2.Zero);
-            _viewport = _manager.GraphicsDevice.Viewport;
+            _cursorSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/cursor"), Vector2.Zero);            
         }
 
         /// <summary>
@@ -123,7 +110,6 @@ namespace GreatMachine.Models.ScreenSystem
             }
 
             // Update cursor
-            Vector2 oldCursor = Cursor;
             if (GamePadState.IsConnected && GamePadState.ThumbSticks.Left != Vector2.Zero)
             {
                 Vector2 temp = GamePadState.ThumbSticks.Left;
@@ -135,19 +121,14 @@ namespace GreatMachine.Models.ScreenSystem
                 Cursor = new Vector2(MouseState.X, MouseState.Y);
             }
 
-            Cursor = new Vector2(MathHelper.Clamp(Cursor.X, 0f, _viewport.Width), MathHelper.Clamp(Cursor.Y, 0f, _viewport.Height));
-
-            if (IsCursorValid && oldCursor != Cursor)
-                IsCursorMoved = true;
-            else
-                IsCursorMoved = false;
-
-            IsCursorValid = _viewport.Bounds.Contains(MouseState.X, MouseState.Y);
+            Cursor = new Vector2(
+                MathHelper.Clamp(Cursor.X, 0f, _manager.GraphicsDevice.Viewport.Width), 
+                MathHelper.Clamp(Cursor.Y, 0f, _manager.GraphicsDevice.Viewport.Height));         
         }
 
         public void Draw()
         {
-            if (_cursorIsVisible && IsCursorValid)
+            if (ShowCursor)
             {
                 _manager.SpriteBatch.Begin();
                 _manager.SpriteBatch.Draw(_cursorSprite.Texture, Cursor, null, Color.White, 0f, _cursorSprite.Origin, 1f, SpriteEffects.None, 0f);

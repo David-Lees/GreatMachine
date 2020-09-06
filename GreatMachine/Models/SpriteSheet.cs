@@ -48,7 +48,7 @@ namespace GreatMachine.Models
             {
                 for (int x = 0; x < xCount; x++)
                 {
-                    Index.Add($"Sprite{i:000}", new Rectangle(x * width, y * width, width, height));
+                    Index.Add($"Sprite{i:000}", new Rectangle(x * width, y * height, width, height));
                     i++;
                 }
             }

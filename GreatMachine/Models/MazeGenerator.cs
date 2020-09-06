@@ -149,14 +149,14 @@ namespace GreatMachine.Models
             var walls = new List<BaseEntity>();
                            
             wallCoords.Add(new Tuple<int, int, SpriteSheet>(-1,-1, Corner()));
-            
+            wallCoords.Add(new Tuple<int, int, SpriteSheet>(-1, -1 + (cellsize + 1) * Height, Corner()));
             for (int y = 0; y < Height; y++)
             {                
                 wallCoords.Add(new Tuple<int, int, SpriteSheet>(-1, y * (cellsize + 1), Vertical()));
             }
             for (int x = 0; x < Width; x++)
             {                
-                wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1), -1, Corner()));                
+                wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1), -1, Horizontal()));                
                 wallCoords.Add(new Tuple<int, int, SpriteSheet>(x * (cellsize + 1) + cellsize, -1, Corner()));
                 for (int y = 0; y < Height; y++)
                 {
@@ -184,8 +184,8 @@ namespace GreatMachine.Models
             {
                 walls.Add(
                     new Wall(
-                        (c.Item1 + 1) * Main.Instance.SectorSize + (c.Item3.SpriteWidth / 2) - 32,
-                        (c.Item2 + 1) * Main.Instance.SectorSize + (c.Item3.SpriteHeight / 2) - 32, 
+                        (c.Item1 + 1) * Main.Instance.SectorSize + (c.Item3.SpriteWidth / 2),
+                        (c.Item2 + 1) * Main.Instance.SectorSize + (c.Item3.SpriteHeight / 2), 
                         c.Item3.SpriteWidth, 
                         c.Item3.SpriteHeight, 
                         c.Item3));

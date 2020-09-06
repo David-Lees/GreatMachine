@@ -23,7 +23,7 @@ namespace GreatMachine.Models
             FlowFieldZ = new int[width * height];
         }
 
-        private int P(int x, int y) => PositionHelper.Convert2Dto1D(x, y, MapWidth);
+        private int P(int x, int y) => MathHelper.Clamp(PositionHelper.Convert2Dto1D(x, y, MapWidth), 0, MapWidth * MapHeight);
 
         public void SetObstacle(int x, int y, bool isObstacle)
         {
@@ -110,8 +110,9 @@ namespace GreatMachine.Models
         }
 
 
-        public Vector2 GetVector(Vector2 position)
+        public Vector2 GetVector(Vector2 position, out bool shootAttempt)
         {
+            shootAttempt = false;
             var x = (int)Math.Floor(position.X / Main.Instance.SectorSize);
             var y = (int)Math.Floor(position.Y / Main.Instance.SectorSize);
 
@@ -135,6 +136,8 @@ namespace GreatMachine.Models
             if (possibleDirections.Count > 0)
             {
                 var random = Main.Instance.Random.Next(50);
+
+                shootAttempt = random < 5;
 
                 // Head for the player
                 if (random < 40)

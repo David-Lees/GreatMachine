@@ -17,7 +17,9 @@ namespace GreatMachine.Models
             Body.IsBullet = true;
             Body.Mass = 0.01f;
             Body.ApplyForce(velocity * 100);
-            Body.OnCollision += OnCollisionEventHandler;         
+            Body.OnCollision += OnCollisionEventHandler;
+            Body.SetCollisionCategories(Category.Cat5);
+            Body.SetCollidesWith(Category.Cat1 | Category.Cat2 | Category.Cat3 | Category.Cat4);
         }
 
         private bool OnCollisionEventHandler(Fixture sender, Fixture other, Contact contact)
