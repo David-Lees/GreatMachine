@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/projects/GreatMachine/GreatMachine/Content/Fonts/menuFont.spritefont</SourceFile>
+  <SourceFile>d:/Projects/GreatMachine/GreatMachine/Content/Fonts/menuFont.spritefont</SourceFile>
   <SourceTime>2020-09-04T21:00:31.4181434+01:00</SourceTime>
-  <DestFile>D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Fonts/menuFont.xnb</DestFile>
-  <DestTime>2020-09-04T21:00:37.1247126+01:00</DestTime>
+  <DestFile>d:/Projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Fonts/menuFont.xnb</DestFile>
+  <DestTime>2020-09-06T16:29:16.8453422+01:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/projects/GreatMachine/GreatMachine/Content/background1.png</SourceFile>
+  <SourceFile>d:/Projects/GreatMachine/GreatMachine/Content/background1.png</SourceFile>
   <SourceTime>2020-09-03T20:57:32.7225273+01:00</SourceTime>
-  <DestFile>D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/background1.xnb</DestFile>
-  <DestTime>2020-09-03T21:00:38.9055759+01:00</DestTime>
+  <DestFile>d:/Projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/background1.xnb</DestFile>
+  <DestTime>2020-09-06T16:29:12.2883448+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

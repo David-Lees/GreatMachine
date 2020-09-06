@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top-right.png</SourceFile>
+  <SourceFile>d:/Projects/GreatMachine/GreatMachine/Content/Overlays/cogs-top-right.png</SourceFile>
   <SourceTime>2020-09-02T23:10:56.8853896+01:00</SourceTime>
-  <DestFile>D:/projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Overlays/cogs-top-right.xnb</DestFile>
-  <DestTime>2020-09-02T23:23:38.29282+01:00</DestTime>
+  <DestFile>d:/Projects/GreatMachine/GreatMachine/Content/bin/DesktopGL/Content/Overlays/cogs-top-right.xnb</DestFile>
+  <DestTime>2020-09-06T16:29:16.9453429+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
