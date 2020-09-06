@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:Bugs/Bugs.png
 
+#begin Bugs/die1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bugs/die1.wav
+
+#begin Bugs/die2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bugs/die2.wav
+
 #begin Bugs/Spawner.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:Bugs/Spawner.png
 
+#begin Bullets/bag.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bullets/bag.wav
+
+#begin Bullets/bounce.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bullets/bounce.wav
+
 #begin Bullets/bullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,18 +96,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Bullets/bullet.png
-
-#begin Bullets/ric1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Bullets/ric1.wav
-
-#begin Bullets/ric6.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Bullets/ric6.wav
 
 #begin Common/arrow.png
 /importer:TextureImporter
@@ -346,6 +358,30 @@
 /processorParam:TextureFormat=Color
 /build:Overlays/logo.png
 
+#begin Player/eek.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Player/eek.wav
+
+#begin Player/health.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Player/health.png
+
+#begin Player/oh.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Player/oh.wav
+
 #begin Player/Player.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -357,6 +393,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Player/Player.png
+
+#begin Player/Wilhelm_Scream.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Player/Wilhelm_Scream.wav
+
+#begin Shadowlands3Machine.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shadowlands3Machine.wav
 
 #begin Walls/combined-cogs1.png
 /importer:TextureImporter

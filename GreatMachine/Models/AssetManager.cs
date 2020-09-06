@@ -17,6 +17,7 @@ namespace GreatMachine.Models
         public List<SpriteSheet> CornerWallSheets { get; set; }
         public SpriteSheet CursorSheet { get; set; }
         public SpriteSheet SpawnerSheet { get; set; }
+        public SpriteSheet HealthSheet { get; set; }
 
         public Dictionary<string, SoundEffect> SoundEffects { get; set; }
 
@@ -47,6 +48,7 @@ namespace GreatMachine.Models
             var BulletTexture = content.Load<Texture2D>("Bullets/bullet");
             var CursorTexture = content.Load<Texture2D>("Crosshairs");
             var SpawnerTexture = content.Load<Texture2D>("Bugs/Spawner");
+            var HealthTexture = content.Load<Texture2D>("Player/health");
 
             BackgroundTexture = content.Load<Texture2D>("background1");
             CogsTopRight = content.Load<Texture2D>("Overlays/cogs-top-right");
@@ -64,7 +66,8 @@ namespace GreatMachine.Models
             PlayerSheet = new SpriteSheet(PlayerTexture).GenerateIndexes(128, 128, 1, 1);
             BulletSheet = new SpriteSheet(BulletTexture).GenerateIndexes(8, 8, 2, 1);
             CursorSheet = new SpriteSheet(CursorTexture).GenerateIndexes(32, 32, 1, 1);
-            SpawnerSheet = new SpriteSheet(SpawnerTexture).GenerateIndexes(128, 128, 1, 1);       
+            SpawnerSheet = new SpriteSheet(SpawnerTexture).GenerateIndexes(128, 128, 1, 1);
+            HealthSheet = new SpriteSheet(HealthTexture).GenerateIndexes(32, 32, 1, 1);
 
             HorizontalWallSheets = new List<SpriteSheet>
             {
@@ -83,15 +86,18 @@ namespace GreatMachine.Models
                 new SpriteSheet(content.Load<Texture2D>("Walls/wall2")).GenerateIndexes(64, 64, 1, 1)
             };
 
-            SoundEffects = new Dictionary<string, SoundEffect>();
-            try
+            SoundEffects = new Dictionary<string, SoundEffect>
             {
-                SoundEffects.Add("Ricochet1", content.Load<SoundEffect>("Bullets/ric1"));
-                SoundEffects.Add("Ricochet2", content.Load<SoundEffect>("Bullets/ric6"));
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
+                { "Bag", content.Load<SoundEffect>("Bullets/bag") },
+                { "Bounce", content.Load<SoundEffect>("Bullets/bounce") },
+                { "Die1", content.Load<SoundEffect>("Bugs/die1") },
+                { "Die2", content.Load<SoundEffect>("Bugs/die2") },
+                { "Wilhelm", content.Load<SoundEffect>("Player/Wilhelm_Scream") },
+                { "Eek", content.Load<SoundEffect>("Player/eek") },
+                { "Oh", content.Load<SoundEffect>("Player/oh") },
+                { "Music", content.Load<SoundEffect>("Shadowlands3Machine") }
+            };
+
         }
     }
 }

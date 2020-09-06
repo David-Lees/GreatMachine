@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GreatMachine.Models.ScreenSystem
 {
@@ -83,6 +84,11 @@ namespace GreatMachine.Models.ScreenSystem
             {
                 _menuEntries[_selectedEntry].Act();               
             }
+
+            if (input.IsNewKeyPress(Keys.F11))
+            {
+                Main.Instance.ToggleFullscreen();
+            }
         }
 
         /// <summary>
@@ -118,6 +124,8 @@ namespace GreatMachine.Models.ScreenSystem
                 bool isSelected = IsActive && (i == _selectedEntry);
                 _menuEntries[i].Update(isSelected, gameTime);
             }
+
+            _menuTop = ScreenManager.GraphicsDevice.Viewport.Height * 0.45f;
         }
 
         public override void Draw(GameTime gameTime)

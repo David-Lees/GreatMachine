@@ -44,6 +44,12 @@ namespace GreatMachine.Models
             }
         }
 
+        public bool IsObstacle(int x, int y)
+        {
+            if (x >= 0 && y >= 0 && x < MapWidth && y < MapHeight) return ObstacleMap[P(x, y)];
+            return true;
+        }
+
         private void SetObstacleInner(int x, int y, bool isObstacle)
         {
             if (x >= 0 && y >= 0 && x < MapWidth && y < MapHeight) ObstacleMap[P(x, y)] = isObstacle;

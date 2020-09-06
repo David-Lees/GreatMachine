@@ -5,6 +5,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Text;
 
 namespace GreatMachine.Models.ScreenSystem
 {
@@ -20,11 +21,8 @@ namespace GreatMachine.Models.ScreenSystem
         private const float LogoWidthHeightRatio = 1.4f;
 
         private Texture2D _backgroundTexture;
-        private Rectangle _logoDestination;
         private Texture2D _logoTexture;
         private Texture2D _titleTexture;
-        private Rectangle _titleDestination;
-        private Rectangle _viewport;
         private Texture2D _girl;
 
         /// <summary>
@@ -39,26 +37,7 @@ namespace GreatMachine.Models.ScreenSystem
             _logoTexture = ScreenManager.Content.Load<Texture2D>("Common/logo");
             _backgroundTexture = ScreenManager.Content.Load<Texture2D>("background2");
             _titleTexture = ScreenManager.Content.Load<Texture2D>("Overlays/logo");
-            _girl = ScreenManager.Content.Load<Texture2D>("Overlays/girl");
-            
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 logoSize = new Vector2
-            {
-                Y = viewport.Height * LogoScreenHeightRatio
-            };
-            logoSize.X = logoSize.Y * LogoWidthHeightRatio;
-
-            var ratio = (viewport.Width / 2.0f) / _titleTexture.Width;
-            _titleDestination = new Rectangle(
-                (int)((viewport.Width - (_titleTexture.Width * ratio)) / 2.0f), 
-                (int)(viewport.Height / 10.0f), 
-                (int)(_titleTexture.Width * ratio), (int)(_titleTexture.Height * ratio));
-
-
-            float border = viewport.Height * LogoScreenBorderRatio;
-            Vector2 logoPosition = new Vector2(border, viewport.Height - border - logoSize.Y);
-            _logoDestination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
-            _viewport = viewport.Bounds;            
+            _girl = ScreenManager.Content.Load<Texture2D>("Overlays/girl");                            
         }
 
         /// <summary>
@@ -78,11 +57,40 @@ namespace GreatMachine.Models.ScreenSystem
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            Vector2 logoSize = new Vector2
+            {
+                Y = viewport.Height * LogoScreenHeightRatio
+            };
+            logoSize.X = logoSize.Y * LogoWidthHeightRatio;
+
+            var ratio = (viewport.Width / 2.0f) / _titleTexture.Width;
+            var _titleDestination = new Rectangle(
+                (int)((viewport.Width - (_titleTexture.Width * ratio)) / 2.0f),
+                (int)(viewport.Height / 10.0f),
+                (int)(_titleTexture.Width * ratio), (int)(_titleTexture.Height * ratio));
+
+
+            float border = viewport.Height * LogoScreenBorderRatio;
+            Vector2 logoPosition = new Vector2(border, viewport.Height - border - logoSize.Y);
+            var _logoDestination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
+            var _viewport = viewport.Bounds;
+
             ScreenManager.SpriteBatch.Begin();
             ScreenManager.SpriteBatch.Draw(_backgroundTexture, _viewport, Color.White);
             ScreenManager.SpriteBatch.Draw(_logoTexture, _logoDestination, Color.White * 0.25f);
             ScreenManager.SpriteBatch.Draw(_titleTexture, _titleDestination, Color.White);
             ScreenManager.SpriteBatch.Draw(_girl, new Vector2(_viewport.Width - _girl.Width, _viewport.Height - _girl.Height), Color.White);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Shadowlands 3 - Machine Kevin MacLeod (incompetech.com)");
+            sb.AppendLine("Licensed under Creative Commons: By Attribution 3.0 License http://creativecommons.org/licenses/by/3.0/");
+
+            ScreenManager.SpriteBatch.DrawString(
+                Main.Instance.Assets.DefaultFont, sb, 
+                new Vector2(3, _viewport.Height - Main.Instance.Assets.DefaultFont.MeasureString("Mp").Y),
+                Color.White, 0, Vector2.Zero, 0.5f, SpriteEffects.None, 0);
+
             ScreenManager.SpriteBatch.End();
         }
     }

@@ -26,6 +26,8 @@ namespace GreatMachine.Models
             if (item is Player p)
             {
                 p.Health -= 5;
+                float pitch = (float)Main.Instance.Random.NextDouble() - 1.0f;
+                Main.Instance.Assets.SoundEffects["Oh"].Play(1.0f, pitch *0.2f, 0);
                 Destroy();
             }
             if (item is Wall)

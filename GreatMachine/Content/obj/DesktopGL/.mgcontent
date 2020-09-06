@@ -7,10 +7,12 @@
     <File>D:/Projects/GreatMachine/GreatMachine/Content/background1.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/background2.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Bugs.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/die1.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/die2.wav</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bugs/Spawner.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bag.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bounce.wav</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/bullet.png</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/ric1.wav</File>
-    <File>D:/Projects/GreatMachine/GreatMachine/Content/Bullets/ric6.wav</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/arrow.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/cursor.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Common/logo.png</File>
@@ -34,7 +36,12 @@
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/Girl.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/HealthBar.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Overlays/logo.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/eek.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/health.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/oh.wav</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/Player.png</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Player/Wilhelm_Scream.wav</File>
+    <File>D:/Projects/GreatMachine/GreatMachine/Content/Shadowlands3Machine.wav</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/combined-cogs1.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/combined-cogs1r.png</File>
     <File>D:/Projects/GreatMachine/GreatMachine/Content/Walls/Combined-Cogs2.png</File>
@@ -56,7 +63,14 @@
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File>DefaultFont.spritefont</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

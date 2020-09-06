@@ -34,6 +34,8 @@ namespace GreatMachine.Models
             var item = other.Body.Tag;
             if (item is Player p)
             {
+                float pitch = (float)Main.Instance.Random.NextDouble() - 1.0f;
+                Main.Instance.Assets.SoundEffects["Eek"].Play(1.0f, pitch * 0.2f, 0);
                 p.Health -= 10;
             }
 
@@ -65,7 +67,19 @@ namespace GreatMachine.Models
 
             ShootCooldown -= ShootCooldown > 0 ? gameTime.ElapsedGameTime.TotalSeconds : 0;
 
-            if (Health < 0 || Lifespan < 0) Destroy();
+            if (Health < 0 || Lifespan < 0)
+            {
+                float pitch = (float)Main.Instance.Random.NextDouble() - 1.0f;
+                var playerPos = Main.Instance.Player.Body.Position;
+                var distance = Vector2.DistanceSquared(playerPos, Body.Position);
+                var maxSound = Main.Instance.Assets.MaxSoundDistance;
+                var volume = MathHelper.Clamp((maxSound - distance) / (maxSound * 4), 0, 0.25f);
+                var pan = MathHelper.Clamp((Body.Position.X - playerPos.X) / 500, -1.0f, 1.0f);
+                Main.Instance.Assets
+                    .SoundEffects[new string[] { "Die1", "Die2" }.OrderBy(x => Guid.NewGuid()).First()]
+                    .Play(volume, pitch, pan);
+                Destroy();
+            }
         }
 
         public override void UpdateDirection()
@@ -82,7 +96,7 @@ namespace GreatMachine.Models
 
             if (shootAttempt && !HitWall() && ShootCooldown <= 0)
             {
-                Shoot(Main.Instance.Player.Body.Position);                
+                Shoot(Main.Instance.Player.Body.Position + new Vector2(Main.Instance.Random.Next(0, 256) - 128, Main.Instance.Random.Next(0, 256) - 128));                
             }
         }
 

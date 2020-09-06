@@ -41,19 +41,20 @@ namespace GreatMachine.Models
             }
             if (item is Wall)
             {
+                float pitch = (float)Main.Instance.Random.NextDouble() - 1.0f;
+                var playerPos = Main.Instance.Player.Body.Position;
+                var distance = Vector2.DistanceSquared(playerPos, Body.Position);
+                var maxSound = Main.Instance.Assets.MaxSoundDistance;
+                var volume = MathHelper.Clamp((maxSound - distance) / (maxSound * 4), 0, 0.25f);
+                var pan = MathHelper.Clamp((Body.Position.X - playerPos.X) / 500, -1.0f, 1.0f);
                 if (IsBouncable)
                 {
-                    var effect = Main.Instance.Random.Next(0, 2) == 0 ? "Ricochet1" : "Ricochet2";
-                    float pitch = (float)Main.Instance.Random.NextDouble() - 1.0f;
-                    var playerPos = Main.Instance.Player.Body.Position;
-                    var distance = Vector2.DistanceSquared(playerPos, Body.Position);
-                    var maxSound = Main.Instance.Assets.MaxSoundDistance;
-                    var volume = MathHelper.Clamp((maxSound - distance) / (maxSound * 4), 0, 0.25f);
-                    var pan = MathHelper.Clamp((Body.Position.X - playerPos.X) / 500, -1.0f, 1.0f);
-                    Main.Instance.Assets.SoundEffects[effect].Play(volume, pitch, pan);
+
+                    Main.Instance.Assets.SoundEffects["Bounce"].Play(volume, pitch, pan);
                 }
                 else
                 {
+                    Main.Instance.Assets.SoundEffects["Bag"].Play(volume, pitch, pan);
                     Destroy();
                 }
             }

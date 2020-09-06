@@ -2,6 +2,7 @@
 using GreatMachine.Models;
 using GreatMachine.Models.ScreenSystem;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -56,6 +57,8 @@ namespace GreatMachine
         public MenuScreen Menu { get; set; }
         public Vector2 Crosshairs { get; set; }
 
+        public SoundEffectInstance Music { get; set; }
+
         public Main(GraphicsDeviceManager graphics, GraphicsDevice graphicsDevice, ContentManager content)
         {
             GraphicsDevice = graphicsDevice;
@@ -73,6 +76,23 @@ namespace GreatMachine
 
             var velocityController = new VelocityLimitController(1, 2);
             World.ControllerList.Add(velocityController);
+        }
+
+        public void ToggleFullscreen()
+        {
+            if (_graphics.IsFullScreen)
+            {
+                _graphics.IsFullScreen = false;
+                _graphics.PreferredBackBufferWidth = 1280;
+                _graphics.PreferredBackBufferHeight = 720;
+            }
+            else
+            {
+                _graphics.IsFullScreen = true;
+                _graphics.PreferredBackBufferWidth = _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+                _graphics.PreferredBackBufferHeight = _graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+            }
+            _graphics.ApplyChanges();
         }
 
         public override void LoadContent()
@@ -100,13 +120,23 @@ namespace GreatMachine
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {            
+        {
+            if (Music != null && Music.State != SoundState.Playing)
+            {
+                Music.Play();
+            }
+            else if (Music == null && Assets.SoundEffects.ContainsKey("Music"))
+            {
+                Music = Assets.SoundEffects["Music"].CreateInstance();
+            }
+
             if (IsActive && !otherScreenHasFocus && State == GameState.Running)
             {
                 if (Player.Health < 0)
                 {
                     State = GameState.Lost;
                     GameOver.ScreenState = ScreenState.Active;
+                    Assets.SoundEffects["Wilhelm"].Play();
                 }
 
                 SpawnerCooldown -= SpawnerCooldown > 0 ? gameTime.ElapsedGameTime.TotalSeconds : 0;
@@ -174,7 +204,12 @@ namespace GreatMachine
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            Crosshairs = input.MouseState.Position.ToVector2();
+            Crosshairs = input.MouseState.Position.ToVector2();            
+
+            if (input.IsNewKeyPress(Keys.F11))
+            {
+                ToggleFullscreen();
+            }
 
             if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
             {
@@ -262,7 +297,7 @@ namespace GreatMachine
                 Texture2D minimap = GenerateMiniMap(playerPos);
                 _spriteBatch.Draw(
                     minimap,
-                    new Rectangle(GraphicsDevice.Viewport.Width - Assets.MiniMap.Width - 32, 32, Assets.MiniMap.Width, Assets.MiniMap.Height),
+                    new Rectangle(GraphicsDevice.Viewport.Width - (int)(Assets.MiniMap.Width * 1.5) - 16, 16, (int)(Assets.MiniMap.Width * 1.5), (int)(Assets.MiniMap.Height * 1.5)),
                     Color.White);
             }
             if (isDebug)
@@ -375,8 +410,8 @@ namespace GreatMachine
                 if (e.GetType() != typeof(Player)) e.Destroy();
             }
 
-            var width = 45;
-            var height = width * 9 / 16;
+            var width = 31;
+            var height = 21; //width * 9 / 16;
             SectorCountX = width * 6;
             SectorCountY = height * 6;
             sectors = new int[SectorCountX * SectorCountY];
@@ -405,17 +440,42 @@ namespace GreatMachine
             }
             Entities.AddRange(walls);
 
-            for (int i = 0; i < 50; i++)
+            var positions = new List<Vector2>();
+            var spanwerCount = 0;
+            while(spanwerCount < 30)            
             {
-                var spawner = new Spawner(new Vector2(
+                var vector = new Vector2(
                     Random.Next(width) * SectorSize * 6 + (SectorSize / 2) + (SectorSize * 2) + 64,
                     Random.Next(height) * SectorSize * 6 + (SectorSize / 2) + (SectorSize * 2) + 64
-                    ));
-                Entities.Add(spawner);
+                    );
 
-                for (int j = 0; j < 10; j++)
+                if (!positions.Contains(vector) && Vector2.Distance(vector, Player.Body.Position) > 640)
                 {
-                    SpawnCrawlerAt(spawner);
+                    spanwerCount++;
+                    var spawner = new Spawner(vector);
+                    Entities.Add(spawner);
+
+                    for (int j = 0; j < 10; j++)
+                    {
+                        SpawnCrawlerAt(spawner);
+                    }
+                }
+            }
+
+            var healthCount = 0;
+            while(healthCount < 30)
+            {
+                var x = Random.Next(0, SectorCountX);
+                var y = Random.Next(0, SectorCountY);
+                if (!Pathfinder.IsObstacle(x, y))
+                {
+                    var v = new Vector2(x * SectorSize - (SectorSize / 2), y * SectorSize - (SectorSize / 2));
+                    if (!positions.Contains(v))
+                    {
+                        healthCount++;
+                        var health = new Health(v);
+                        Entities.Add(health);
+                    }
                 }
             }
 
